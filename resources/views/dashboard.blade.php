@@ -14,6 +14,7 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <h1>Welcome {{ Auth::user()->name }}</h1>
                     <p>Your role is {{ Auth::user()->getRoleNames()->first() }}</p>
+                    
                 </div>
             </div>
         </div>
