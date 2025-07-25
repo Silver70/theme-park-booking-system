@@ -50,8 +50,33 @@ class MenuService
                 'route' => 'dashboard',
             ],
             [
-                'name' => 'Schedule',
-                'icon' => 'radix-dashboard',
+                'name' => 'Ferries',
+                'icon' => 'radix-rocket',
+                'route' => 'dashboard',
+            ],
+            [
+                'name' => 'Schedules',
+                'icon' => 'radix-calendar',
+                'route' => 'dashboard',
+            ],
+            [
+                'name' => 'Routes',
+                'icon' => 'radix-target',
+                'route' => 'dashboard',
+            ],
+            [
+                'name' => 'Bookings',
+                'icon' => 'radix-bookmark',
+                'route' => 'dashboard',
+            ],
+            [
+                'name' => 'Announcements',
+                'icon' => 'radix-chat-bubble',
+                'route' => 'dashboard',
+            ],
+            [
+                'name' => 'Reports',
+                'icon' => 'radix-bar-chart',
                 'route' => 'dashboard',
             ],
         ];

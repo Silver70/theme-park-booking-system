@@ -15,35 +15,54 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         //create admin user
-        $admin = User::create([
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password'),
-        ]);
-        $admin->assignRole('admin');
+        User::create([
+            'name' => 'admin',
+            'email' => 'admin@resort.com',
+            'password' => Hash::make('password123'),
+        ])->assignRole('admin');
 
-        //create hotel owner user
-        $hotelOwner = User::create([
-            'name' => 'Hotel Owner',
-            'email' => 'hotelowner@example.com',
-            'password' => Hash::make('password'),
-        ]);
-        $hotelOwner->assignRole('hotel_owner');
+        User::create([
+            'name' => 'ferry_operator_1',
+            'email' => 'ferry1@resort.com',
+            'password' => Hash::make('password123'),
+        ])->assignRole('ferry_operator');
 
-        //create visitor user
-        $visitor = User::create([
-            'name' => 'Visitor',
-            'email' => 'visitor@example.com',
-            'password' => Hash::make('password'),
-        ]);
-        $visitor->assignRole('visitor');
+        User::create([
+            'name' => 'ferry_operator_2',
+            'email' => 'ferry2@resort.com',
+            'password' => Hash::make('password123'),
+        ])->assignRole('ferry_operator');
 
-        //create ferry operator user
-        $ferryOperator = User::create([
-            'name' => 'Ferry Operator',
-            'email' => 'ferryoperator@example.com',
-            'password' => Hash::make('password'),
-        ]);
-        $ferryOperator->assignRole('ferry_operator');
+        User::create([
+            'name' => 'guest_john',
+            'email' => 'john.doe@email.com',
+            'password' => Hash::make('password123'),
+        ])->assignRole('visitor');
+
+        User::create([
+            'name' => 'guest_sarah',
+            'email' => 'sarah.smith@email.com',
+            'password' => Hash::make('password123'),
+        ])->assignRole('visitor');
+
+        User::create([
+            'name' => 'guest_ahmed',
+            'email' => 'ahmed.hassan@email.com',
+            'password' => Hash::make('password123'),
+        ])->assignRole('visitor');
+
+        User::create([
+            'name' => 'guest_maria',
+            'email' => 'maria.garcia@email.com',
+            'password' => Hash::make('password123'),
+        ])->assignRole('visitor');
+
+        User::create([
+            'name' => 'hotel_owner_1',
+            'email' => 'hotel1@resort.com',
+            'password' => Hash::make('password123'),
+        ])->assignRole('hotel_owner');
+
+    
     }
 }
