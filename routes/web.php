@@ -34,6 +34,15 @@ Route::middleware(['auth', 'role:ferry_operator'])->group(function () {
     Route::get('/ferry/schedules', [DashboardController::class, 'ferrySchedules'])->name('ferry.schedules');
     Route::get('/ferry/schedules/create', [DashboardController::class, 'createFerrySchedule'])->name('ferry.schedules.create');
     Route::post('/ferry/schedules', [DashboardController::class, 'storeFerrySchedule'])->name('ferry.schedules.store');
+    Route::get('/ferry/schedules/{id}/edit', [DashboardController::class, 'editFerrySchedule'])->name('ferry.schedules.edit');
+    Route::patch('/ferry/schedules/{id}', [DashboardController::class, 'updateFerrySchedule'])->name('ferry.schedules.update');
+    Route::patch('/ferry/schedules/{id}/cancel', [DashboardController::class, 'cancelFerrySchedule'])->name('ferry.schedules.cancel');
+    Route::get('/ferry/tickets', [DashboardController::class, 'ferryTickets'])->name('ferry.tickets');
+    Route::get('/ferry/tickets/validate', [DashboardController::class, 'validateTicket'])->name('ferry.tickets.validate');
+    Route::post('/ferry/tickets/validate', [DashboardController::class, 'submitValidation'])->name('ferry.tickets.validate.submit');
+    Route::post('/ferry/tickets/issue', [DashboardController::class, 'issueFerryPass'])->name('ferry.tickets.issue');
+    Route::get('/ferry/tickets/create', [DashboardController::class, 'createFerryTicket'])->name('ferry.tickets.create');
+    Route::post('/ferry/tickets/create', [DashboardController::class, 'storeFerryTicket'])->name('ferry.tickets.store');
 });
 
 Route::get('/register/hotel-owner', [RegisteredUserController::class, 'createHotelOwner']);

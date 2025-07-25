@@ -44,35 +44,27 @@ class MenuService
     public function getFerryOperatorMenu(): array
     {
         return [
-            [
-                'name' => 'Dashboard',
-                'icon' => 'radix-dashboard',
-                'route' => 'ferry.dashboard',
-            ],
-            [
-                'name' => 'Ferries',
-                'icon' => 'radix-rocket',
-                'route' => 'ferry.schedules.create',
-            ],
+         
+         
             [
                 'name' => 'Schedules',
                 'icon' => 'radix-calendar',
                 'route' => 'ferry.schedules',
             ],
             [
-                'name' => 'Routes',
-                'icon' => 'radix-target',
-                'route' => 'dashboard',
+                'name' => 'Ticket Validation',
+                'icon' => 'radix-badge',
+                'route' => 'ferry.tickets.validate',
             ],
             [
-                'name' => 'Bookings',
+                'name' => 'Issue Tickets',
                 'icon' => 'radix-bookmark',
-                'route' => 'dashboard',
+                'route' => 'ferry.tickets.create',
             ],
             [
-                'name' => 'Announcements',
-                'icon' => 'radix-chat-bubble',
-                'route' => 'dashboard',
+                'name' => 'Passenger List',
+                'icon' => 'radix-person',
+                'route' => 'ferry.tickets',
             ],
             [
                 'name' => 'Reports',
