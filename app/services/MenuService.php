@@ -47,17 +47,17 @@ class MenuService
             [
                 'name' => 'Dashboard',
                 'icon' => 'radix-dashboard',
-                'route' => 'dashboard',
+                'route' => 'ferry.dashboard',
             ],
             [
                 'name' => 'Ferries',
                 'icon' => 'radix-rocket',
-                'route' => 'dashboard',
+                'route' => 'ferry.schedules.create',
             ],
             [
                 'name' => 'Schedules',
                 'icon' => 'radix-calendar',
-                'route' => 'dashboard',
+                'route' => 'ferry.schedules',
             ],
             [
                 'name' => 'Routes',
