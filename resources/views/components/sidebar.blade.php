@@ -3,7 +3,7 @@
 <!-- Sidebar component -->
 <div class="flex h-screen bg-gray-100">
     <!-- Sidebar -->
-    <div class="fixed inset-y-0 left-0 z-30 w-64 transition duration-300 transform bg-gray-900 lg:translate-x-0 lg:static lg:inset-0">
+    <div class="fixed inset-y-0 left-0 z-30 w-64 flex-shrink-0 transition duration-300 transform bg-gray-900 lg:translate-x-0 lg:static lg:inset-0">
         <div class="flex items-center justify-between px-6 py-4">
             <!-- Logo -->
             <div class="flex items-center">
@@ -65,7 +65,7 @@
     </div>
 
     <!-- Content area -->
-    <div class="flex flex-col flex-1 w-full">
+    <div class="flex flex-col flex-1 w-full min-w-0">
         <!-- Mobile header -->
         <header class="z-10 py-4 bg-white shadow-md lg:hidden">
             <div class="flex items-center justify-between px-6">

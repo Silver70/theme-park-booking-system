@@ -42,32 +42,35 @@
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Departure Time
+                                            Date
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Ferry
+                                            Departure Time
                                         </th>
+                                     
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Route
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Available Seats
+                                            Capacity 
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Status
+                                        </th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Actions
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach($schedules as $schedule)
-                                        <tr class="hover:bg-gray-50">
+                                        <tr class="hover:bg-gray-50 {{ $schedule->status === 'cancelled' ? 'bg-red-50 border-l-4 border-red-400' : '' }}">
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                {{ $schedule->departure_time->format('M j, Y - g:i A') }}
+                                                {{ $schedule->departure_time->format('M j') }}
                                             </td>
-                                                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                 <div class="font-medium text-gray-900">Ferry #{{ $schedule->id }}</div>
-                                                 <div class="text-xs text-gray-500">ID: {{ $schedule->id }}</div>
-                                             </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                {{ $schedule->departure_time->format('g:i A') }}
+                                         
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <div class="flex items-center">
                                                     <span>{{ $schedule->origin }}</span>
@@ -78,26 +81,57 @@
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ $schedule->seats_available }}
+                                                <div class="flex items-center space-x-2">
+                                                    <span class="font-medium {{ $schedule->fresh_is_full ? 'text-red-600' : 'text-gray-900' }}">
+                                                        {{ $schedule->fresh_capacity_display }}
+                                                    </span>
+                                                    @if($schedule->fresh_is_full)
+                                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                                            FULL
+                                                        </span>
+                                                    @elseif($schedule->fresh_remaining_capacity <= 5)
+                                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                            LOW
+                                                        </span>
+                                                    @endif
+                                                </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                @if($schedule->departure_time->isPast())
+                                                @if($schedule->status === 'completed')
                                                     <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
                                                         Completed
                                                     </span>
-                                                @elseif($schedule->seats_available > 30)
-                                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                                                        Available
-                                                    </span>
-                                                @elseif($schedule->seats_available > 10)
-                                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                                        Limited
+                                                @elseif($schedule->status === 'cancelled')
+                                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                                        Cancelled
                                                     </span>
                                                 @else
-                                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
-                                                        Few Seats
+                                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                                        Scheduled
                                                     </span>
                                                 @endif
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <div class="flex items-center space-x-2">
+                                                    @if($schedule->status === 'scheduled')
+                                                        <a href="{{ route('ferry.schedules.edit', $schedule->id) }}" 
+                                                           class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                                                            Edit
+                                                        </a>
+                                                        
+                                                        <form action="{{ route('ferry.schedules.cancel', $schedule->id) }}" method="POST" class="inline">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <button type="submit" 
+                                                                    onclick="return confirm('Are you sure you want to cancel this schedule?')"
+                                                                    class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                                                                Cancel
+                                                            </button>
+                                                        </form>
+                                                    @else
+                                                        <span class="text-xs text-gray-400">No actions available</span>
+                                                    @endif
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
