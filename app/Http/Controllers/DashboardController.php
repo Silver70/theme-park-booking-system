@@ -294,4 +294,34 @@ class DashboardController extends Controller
             ->with('success', 'Ferry ticket created successfully for ' . $booking->user->name . '! Ticket ID: ' . $ferryTicket->id);
     }
 
+    public function assignFerrySchedule(Request $request)
+    {
+        $request->validate([
+            'ferry_ticket_id' => 'required|exists:ferry_tickets,id',
+            'ferry_schedule_id' => 'required|exists:ferry_schedules,id',
+        ]);
+
+        $ferryTicket = FerryTicket::findOrFail($request->ferry_ticket_id);
+        $schedule = FerrySchedule::findOrFail($request->ferry_schedule_id);
+
+        // Check if the user owns this ticket
+        if ($ferryTicket->user_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'You can only assign schedules to your own ferry tickets.');
+        }
+
+        // Check if schedule is available
+        $currentTicketCount = FerryTicket::where('ferry_schedule_id', $schedule->id)->count();
+        $remainingCapacity = $schedule->seats_available - $currentTicketCount;
+
+        if ($remainingCapacity <= 0) {
+            return redirect()->back()->with('error', 'This ferry schedule is at full capacity.');
+        }
+
+        // Assign the schedule to the ferry ticket
+        $ferryTicket->ferry_schedule_id = $schedule->id;
+        $ferryTicket->save();
+
+        return redirect()->route('home')->with('success', 'Ferry schedule assigned successfully! Your ferry pass is now confirmed.');
+    }
+
 }

@@ -73,4 +73,46 @@ class MenuService
             ],
         ];
     }
+
+    /**
+     * Get admin dashboard menu items
+     *
+     * @return array
+     */
+    public function getAdminMenu(): array
+    {
+        return [
+            [
+                'name' => 'Dashboard',
+                'icon' => 'radix-dashboard',
+                'route' => 'admin.dashboard',
+            ],
+            [
+                'name' => 'User Management',
+                'icon' => 'radix-person',
+                'route' => 'admin.users.index',
+            ],
+            [
+                'name' => 'Hotel Management',
+                'icon' => 'fluentui-conference-room-20-o',
+                'children' => [
+                    ['name' => 'All Rooms', 'route' => 'admin.rooms.index'],
+                    ['name' => 'Bookings', 'route' => 'admin.bookings.index'],
+                ]
+            ],
+            [
+                'name' => 'Ferry Management',
+                'icon' => 'radix-calendar',
+                'children' => [
+                    ['name' => 'Schedules', 'route' => 'admin.ferry.schedules'],
+                    ['name' => 'Tickets', 'route' => 'admin.ferry.tickets'],
+                ]
+            ],
+            [
+                'name' => 'Reports',
+                'icon' => 'radix-bar-chart',
+                'route' => 'admin.reports.index',
+            ],
+        ];
+    }
 }
