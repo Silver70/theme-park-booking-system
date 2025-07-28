@@ -38,6 +38,8 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(route('ferry.dashboard', absolute:false));
         } else if($user->isVisitor()){
             return redirect()->intended(route('home', absolute:false));
+        } else if($user->hasRole('hotel_staff')){
+            return redirect()->intended(route('hotelstaff.dashboard', absolute:false));
         } else {
             return redirect()->intended(route('dashboard', absolute:false));
         }

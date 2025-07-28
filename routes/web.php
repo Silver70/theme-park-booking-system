@@ -69,6 +69,15 @@ Route::middleware(['auth', 'role:visitor'])->group(function () {
     Route::post('/rooms/check-availability', [App\Http\Controllers\RoomController::class, 'checkAvailability'])->name('rooms.check-availability');
 });
 
+// Hotel staff routes
+Route::middleware(['auth', 'role:hotel_staff'])->prefix('hotelstaff')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\HotelStaffController::class, 'dashboard'])->name('hotelstaff.dashboard');
+    Route::resource('rooms', App\Http\Controllers\HotelStaffRoomController::class, ['as' => 'hotelstaff']);
+    Route::resource('bookings', App\Http\Controllers\HotelStaffBookingController::class, ['as' => 'hotelstaff']);
+    Route::resource('promotions', App\Http\Controllers\HotelStaffPromotionController::class, ['as' => 'hotelstaff']);
+    Route::get('/reports', [App\Http\Controllers\HotelStaffController::class, 'reports'])->name('hotelstaff.reports.index');
+});
+
 Route::get('/register/hotel-owner', [RegisteredUserController::class, 'createHotelOwner']);
 Route::post('/register/hotel-owner', [RegisteredUserController::class, 'storeHotelOwner'])->name('register.hotel-owner');
 

@@ -18,5 +18,6 @@ class RoleSeeder extends Seeder
         Role::firstOrCreate(['name' => 'hotel_owner']);
         Role::firstOrCreate(['name' => 'ferry_operator']);
         Role::firstOrCreate(['name' => 'visitor']);
+        Role::firstOrCreate(['name' => 'hotel_staff']);
     }
 }

@@ -115,4 +115,35 @@ class MenuService
             ],
         ];
     }
+
+    public function getHotelStaffMenu(): array
+    {
+        return [
+            [
+                'name' => 'Dashboard',
+                'icon' => 'radix-dashboard',
+                'route' => 'hotelstaff.dashboard',
+            ],
+            [
+                'name' => 'Rooms',
+                'icon' => 'fluentui-conference-room-20-o',
+                'route' => 'hotelstaff.rooms.index',
+            ],
+            [
+                'name' => 'Bookings',
+                'icon' => 'radix-calendar',
+                'route' => 'hotelstaff.bookings.index',
+            ],
+            [
+                'name' => 'Promotions',
+                'icon' => 'radix-badge',
+                'route' => 'hotelstaff.promotions.index',
+            ],
+            [
+                'name' => 'Reports',
+                'icon' => 'radix-bar-chart',
+                'route' => 'hotelstaff.reports.index',
+            ],
+        ];
+    }
 }
