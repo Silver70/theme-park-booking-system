@@ -51,7 +51,8 @@
                                         class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                     <option value="">Select a role</option>
                                     <option value="visitor" {{ old('role') == 'visitor' ? 'selected' : '' }}>Visitor</option>
-                                    <option value="hotel_owner" {{ old('role') == 'hotel_owner' ? 'selected' : '' }}>Hotel Owner</option>
+                                    <option value="hotel_manager" {{ old('role') == 'hotel_manager' ? 'selected' : '' }}>Hotel Manager</option>
+                                    <option value="hotel_staff" {{ old('role') == 'hotel_staff' ? 'selected' : '' }}>Hotel Staff</option>
                                     <option value="ferry_operator" {{ old('role') == 'ferry_operator' ? 'selected' : '' }}>Ferry Operator</option>
                                     <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                                 </select>

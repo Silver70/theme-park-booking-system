@@ -39,13 +39,7 @@
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Role</label>
-                            <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                @if($user->hasRole('admin')) bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400
-                                @elseif($user->hasRole('hotel_owner')) bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400
-                                @elseif($user->hasRole('ferry_operator')) bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400
-                                @else bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400 @endif">
-                                {{ $user->getRoleNames()->first() ?? 'No Role' }}
-                            </span>
+                            <x-role-badge :user="$user" size="lg" />
                         </div>
                         
                         <div>

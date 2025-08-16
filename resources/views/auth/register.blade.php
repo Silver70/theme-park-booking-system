@@ -1,6 +1,6 @@
 <x-guest-layout>
-    @if(isset($role) && $role === 'hotel_owner')
-        <form method="POST" action="{{ route('register.hotel-owner') }}">
+    @if(isset($role) && $role === 'hotel_manager')
+        <form method="POST" action="{{ route('register.hotel-manager') }}">
     @elseif(isset($role) && $role === 'ferry_operator')
         <form method="POST" action="{{ route('register.ferry-operator') }}">
     @else

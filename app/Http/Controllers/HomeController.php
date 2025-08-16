@@ -8,10 +8,18 @@ use App\Models\FerryTicket;
 use App\Models\FerrySchedule;
 use App\Models\FerryTicketRequest;
 use App\Models\DashboardImage;
+use App\Services\CacheService;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
+    protected $cacheService;
+
+    public function __construct(CacheService $cacheService)
+    {
+        $this->cacheService = $cacheService;
+    }
+
     public function index()
     {
         $user = Auth::user();
@@ -39,28 +47,27 @@ class HomeController extends Controller
         
         // Get available ferry schedules for booking
         $availableSchedules = collect();
-        if ($booking && !$ferryPassAssigned) {
-            $availableSchedules = FerrySchedule::whereNull('cancelled_at')
-                ->where('departure_time', '>', now())
-                ->get()
-                ->filter(function ($schedule) {
-                    $ticketCount = FerryTicket::where('ferry_schedule_id', $schedule->id)->count();
-                    $remainingCapacity = $schedule->seats_available - $ticketCount;
-                    return $remainingCapacity > 0;
-                })
-                ->sortBy('departure_time');
-        }
+        $purchaseSchedules = collect();
         
-        // Get all available ferry schedules for purchase (not just for free passes)
-        $purchaseSchedules = FerrySchedule::whereNull('cancelled_at')
-            ->where('departure_time', '>', now())
-            ->get()
-            ->filter(function ($schedule) {
-                $ticketCount = FerryTicket::where('ferry_schedule_id', $schedule->id)->count();
-                $remainingCapacity = $schedule->seats_available - $ticketCount;
-                return $remainingCapacity > 0;
-            })
-            ->sortBy('departure_time');
+        if ($booking) {
+            $bookingDates = [
+                'start' => $booking->check_in_date->copy()->subDay(),
+                'end' => $booking->check_out_date->copy()->addDay()
+            ];
+            
+            $schedules = $this->cacheService->getFerrySchedulesWithCounts($user->id, $bookingDates);
+            
+            // Filter schedules with available capacity
+            $availableSchedulesData = $schedules->filter(function ($schedule) {
+                return ($schedule->seats_available - $schedule->ferry_tickets_count) > 0;
+            });
+            
+            if (!$ferryPassAssigned) {
+                $availableSchedules = $availableSchedulesData;
+            }
+            
+            $purchaseSchedules = $availableSchedulesData;
+        }
         
         // Get user's ferry ticket requests
         $ferryRequests = collect();
@@ -77,11 +84,8 @@ class HomeController extends Controller
             return redirect()->route('rooms.index');
         }
         
-        // Get active dashboard images
-        $dashboardImages = DashboardImage::active()
-            ->ordered()
-            ->get()
-            ->groupBy('display_position');
+        // Get active dashboard images using cache
+        $dashboardImages = $this->cacheService->getDashboardImages();
         
         return view('home', compact(
             'booking', 

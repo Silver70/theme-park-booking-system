@@ -104,8 +104,12 @@
                             <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $reports['user_stats']['visitors'] }}</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Hotel Owners</span>
-                            <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $reports['user_stats']['hotel_owners'] }}</span>
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Hotel Managers</span>
+                            <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $reports['user_stats']['hotel_managers'] }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Hotel Staff</span>
+                            <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $reports['user_stats']['hotel_staff'] }}</span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-sm text-gray-600 dark:text-gray-400">Ferry Operators</span>

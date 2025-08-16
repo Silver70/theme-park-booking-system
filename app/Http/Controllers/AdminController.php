@@ -98,7 +98,8 @@ class AdminController extends Controller
             'user_stats' => [
                 'total' => User::count(),
                 'visitors' => User::role('visitor')->count(),
-                'hotel_owners' => User::role('hotel_owner')->count(),
+                'hotel_managers' => User::role('hotel_manager')->count(),
+                'hotel_staff' => User::role('hotel_staff')->count(),
                 'ferry_operators' => User::role('ferry_operator')->count(),
                 'admins' => User::role('admin')->count(),
                 'verified_users' => User::whereNotNull('email_verified_at')->count(),
@@ -348,7 +349,7 @@ class AdminController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'role' => 'required|in:visitor,hotel_owner,ferry_operator,admin',
+            'role' => 'required|in:visitor,hotel_manager,hotel_staff,ferry_operator,admin',
             'password' => 'required|string|min:8|confirmed',
         ]);
 

@@ -72,7 +72,7 @@
                         </div>
                         <div class="ml-4">
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                                {{ \App\Models\FerrySchedule::whereNull('cancelled_at')->where('departure_time', '>', now())->count() }}
+                                {{ $activeFerrySchedulesCount }}
                             </h3>
                             <p class="text-gray-600 dark:text-gray-400">Ferry Schedules</p>
                         </div>
@@ -86,7 +86,7 @@
                         </div>
                         <div class="ml-4">
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                                {{ \App\Models\Location::active()->count() }}
+                                {{ $activeLocationsCount }}
                             </h3>
                             <p class="text-gray-600 dark:text-gray-400">Locations to Explore</p>
                         </div>

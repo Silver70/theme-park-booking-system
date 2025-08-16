@@ -11,8 +11,12 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    $rooms = Room::where('is_available', true)->take(6)->get();
-    return view('welcome', compact('rooms'));
+    $cacheService = app(\App\Services\CacheService::class);
+    $rooms = $cacheService->getAvailableRooms(6);
+    $activeFerrySchedulesCount = $cacheService->getActiveFerrySchedulesCount();
+    $activeLocationsCount = $cacheService->getActiveLocationsCount();
+    
+    return view('welcome', compact('rooms', 'activeFerrySchedulesCount', 'activeLocationsCount'));
 })->name('welcome');
 
 // Public routes for viewing schedules, map, and rooms (no booking)
@@ -151,8 +155,8 @@ Route::middleware(['auth', 'role:hotel_staff'])->prefix('hotelstaff')->group(fun
     Route::get('/reports', [App\Http\Controllers\HotelStaffController::class, 'reports'])->name('hotelstaff.reports.index');
 });
 
-Route::get('/register/hotel-owner', [RegisteredUserController::class, 'createHotelOwner']);
-Route::post('/register/hotel-owner', [RegisteredUserController::class, 'storeHotelOwner'])->name('register.hotel-owner');
+Route::get('/register/hotel-manager', [RegisteredUserController::class, 'createHotelManager']);
+Route::post('/register/hotel-manager', [RegisteredUserController::class, 'storeHotelManager'])->name('register.hotel-manager');
 
 Route::get('/register/ferry-operator', [RegisteredUserController::class, 'createFerryOperator']);
 Route::post('/register/ferry-operator', [RegisteredUserController::class, 'storeFerryOperator'])->name('register.ferry-operator');

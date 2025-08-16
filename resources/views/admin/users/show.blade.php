@@ -74,13 +74,7 @@
                             
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Role</label>
-                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                    @if($user->hasRole('admin')) bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400
-                                    @elseif($user->hasRole('hotel_owner')) bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400
-                                    @elseif($user->hasRole('ferry_operator')) bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400
-                                    @else bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400 @endif">
-                                    {{ $user->getRoleNames()->first() ?? 'No Role' }}
-                                </span>
+                                <x-role-badge :user="$user" size="lg" />
                             </div>
                             
                             <div>
@@ -114,13 +108,11 @@
                                 <form method="POST" action="{{ route('admin.users.toggle-verification', $user) }}" class="inline">
                                     @csrf
                                     @method('PATCH')
-                                    <button type="submit" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md 
-                                        @if($user->email_verified_at) 
-                                            bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400 hover:bg-yellow-200 dark:hover:bg-yellow-900/30
-                                        @else 
-                                            bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/30
-                                        @endif
-                                        transition ease-in-out duration-150">
+                                    <button type="submit" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md transition ease-in-out duration-150
+                                        {{ $user->email_verified_at 
+                                            ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400 hover:bg-yellow-200 dark:hover:bg-yellow-900/30' 
+                                            : 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/30' 
+                                        }}">
                                         @if($user->email_verified_at)
                                             Remove Verification
                                         @else

@@ -8,9 +8,7 @@
                         <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">User Management</h1>
                         <p class="text-gray-600 dark:text-gray-400">Manage users in the system - add, view, and delete users.</p>
                     </div>
-                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center px-3 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                        ← Back to Dashboard
-                    </a>
+             
                     <a href="{{ route('admin.users.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -88,13 +86,7 @@
                                         <div class="text-sm text-gray-900 dark:text-gray-100">{{ $user->email }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
-                                            @if($user->hasRole('admin')) bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400
-                                            @elseif($user->hasRole('hotel_owner')) bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400
-                                            @elseif($user->hasRole('ferry_operator')) bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400
-                                            @else bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400 @endif">
-                                            {{ $user->getRoleNames()->first() ?? 'No Role' }}
-                                        </span>
+                                        <x-role-badge :user="$user" />
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                         {{ $user->created_at->format('M d, Y') }}

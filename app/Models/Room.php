@@ -43,6 +43,28 @@ class Room extends Model
     }
 
     /**
+     * Scope to get available rooms efficiently
+     */
+    public function scopeAvailable($query)
+    {
+        return $query->where('is_available', true);
+    }
+
+    /**
+     * Scope to get rooms without active bookings
+     */
+    public function scopeNotCurrentlyBooked($query)
+    {
+        return $query->whereNotExists(function ($subquery) {
+            $subquery->select(\DB::raw(1))
+                ->from('bookings')
+                ->whereColumn('bookings.room_id', 'rooms.id')
+                ->where('check_in_date', '<=', now())
+                ->where('check_out_date', '>', now());
+        });
+    }
+
+    /**
      * Get the current availability status
      */
     public function getAvailabilityStatusAttribute()

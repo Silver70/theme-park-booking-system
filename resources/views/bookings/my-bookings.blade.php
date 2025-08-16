@@ -27,18 +27,9 @@
                                                 <span class="px-2 py-1 text-xs font-medium rounded-full {{ $booking->booking_status_color }}">
                                                     {{ $booking->booking_status_text }}
                                                 </span>
-                                                <span class="px-2 py-1 text-xs font-medium rounded-full 
-                                                    @if($booking->check_out_date >= now())
-                                                        bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100
-                                                    @else
-                                                        bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100
-                                                    @endif">
-                                                    @if($booking->check_out_date >= now())
-                                                        Active
-                                                    @else
-                                                        Completed
-                                                    @endif
-                                                </span>
+                                                <x-status-badge 
+                                                    :status="$booking->check_out_date >= now() ? 'active' : 'completed'" 
+                                                />
                                             </div>
                                             
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
