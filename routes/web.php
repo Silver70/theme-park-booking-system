@@ -52,9 +52,9 @@ Route::middleware(['auth', 'role:ferry_operator'])->group(function () {
 
     
     // Ferry ticket request management
-    Route::get('/ferry/requests', [DashboardController::class, 'ferryTicketRequests'])->name('ferry.requests');
-    Route::patch('/ferry/requests/{id}/approve', [DashboardController::class, 'approveRequest'])->name('ferry.requests.approve');
-    Route::patch('/ferry/requests/{id}/deny', [DashboardController::class, 'denyRequest'])->name('ferry.requests.deny');
+    Route::get('/ferry/requests', [FerryTicketController::class, 'ferryTicketRequests'])->name('ferry.requests');
+    Route::patch('/ferry/requests/{id}/approve', [FerryTicketController::class, 'approveRequest'])->name('ferry.requests.approve');
+    Route::patch('/ferry/requests/{id}/deny', [FerryTicketController::class, 'denyRequest'])->name('ferry.requests.deny');
 
     Route::get('/ferry/schedules', [FerryScheduleController::class, 'index'])->name('ferry.schedules');
     Route::get('/ferry/schedules/create', [FerryScheduleController::class, 'create'])->name('ferry.schedules.create');
@@ -113,11 +113,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 // Route for visitors to assign ferry schedules to their tickets and book rooms
 Route::middleware(['auth', 'role:visitor'])->group(function () {
-    Route::post('/ferry/tickets/assign-schedule', [DashboardController::class, 'assignFerrySchedule'])->name('ferry.tickets.assign-schedule');
+    Route::post('/ferry/tickets/assign-schedule', [FerryTicketController::class, 'assignFerrySchedule'])->name('ferry.tickets.assign-schedule');
     
 
     // Ferry ticket request routes for visitors
-    Route::get('/ferry/schedules', [App\Http\Controllers\HomeController::class, 'ferrySchedules'])->name('visitor.ferry.schedules');
+    Route::get('/ferry/schedules/view', [App\Http\Controllers\HomeController::class, 'ferrySchedules'])->name('visitor.ferry.schedules');
     Route::get('/ferry/request', [App\Http\Controllers\HomeController::class, 'requestTicket'])->name('ferry.request');
     Route::post('/ferry/request', [App\Http\Controllers\HomeController::class, 'submitRequest'])->name('ferry.submit-request');
     Route::get('/ferry/my-requests', [App\Http\Controllers\HomeController::class, 'myRequests'])->name('ferry.my-requests');

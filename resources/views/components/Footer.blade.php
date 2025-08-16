@@ -39,7 +39,7 @@
                     <h3 class="text-lg font-semibold">Quick Links</h3>
                     <ul class="space-y-2">
                         <li><a href="#book-now" class="text-gray-400 hover:text-white transition-colors">Book Now</a></li>
-                        <li><a href="{{ route('ferry.schedules') }}" class="text-gray-400 hover:text-white transition-colors">Ferry Schedule</a></li>
+                        <li><a href="{{ route('schedules.index') }}" class="text-gray-400 hover:text-white transition-colors">Ferry Schedule</a></li>
                         <li><a href="#attractions" class="text-gray-400 hover:text-white transition-colors">Attractions</a></li>
                         <li><a href="#gallery" class="text-gray-400 hover:text-white transition-colors">Gallery</a></li>
                         <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
