@@ -31,6 +31,11 @@ class FerrySchedule extends Model
         return $this->hasMany(FerryTicket::class);
     }
 
+    public function tickets()
+    {
+        return $this->ferryTickets();
+    }
+
     /**
      * Get the number of tickets issued for this schedule
      */

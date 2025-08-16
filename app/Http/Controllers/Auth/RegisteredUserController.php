@@ -46,7 +46,7 @@ class RegisteredUserController extends Controller
         $user->assignRole('visitor');
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('visitor-dashboard', absolute: false));
     }
 
     //hotel owner registration

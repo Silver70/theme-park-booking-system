@@ -29,4 +29,5 @@ class DashboardController extends Controller
         $menuItems = $this->menuService->getFerryOperatorMenu();
         return view('ferry.dashboard', compact('menuItems'));
     }
+
 }

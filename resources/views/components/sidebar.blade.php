@@ -20,7 +20,7 @@
                         <div class="flex items-center justify-between w-full px-3 py-2 text-gray-300 transition-colors duration-200 rounded-md hover:bg-gray-800 hover:text-white">
                             <div class="flex items-center">
                                 @if(isset($item['icon']))
-                                    <x-dynamic-component :component="$item['icon']" class="w-5 h-5 text-gray-400" />
+                                    @include('components.icons.' . $item['icon'], ['class' => 'w-5 h-5 text-gray-400'])
                                 @endif
                                 <span class="mx-3">{{ $item['name'] }}</span>
                             </div>
@@ -37,7 +37,7 @@
                     <!-- Regular menu item -->
                     <a href="{{ route($item['route']) }}" class="flex items-center px-3 py-2 {{ !$loop->first ? 'mt-3' : '' }} text-gray-300 transition-colors duration-200 rounded-md hover:bg-gray-800 hover:text-white {{ request()->routeIs($item['route']) ? 'bg-gray-800 text-white' : '' }}">
                         @if(isset($item['icon']))
-                            <x-dynamic-component :component="$item['icon']" class="w-5 h-5 text-gray-400" />
+                            @include('components.icons.' . $item['icon'], ['class' => 'w-5 h-5 text-gray-400'])
                         @endif
                         <span class="mx-3">{{ $item['name'] }}</span>
                     </a>
