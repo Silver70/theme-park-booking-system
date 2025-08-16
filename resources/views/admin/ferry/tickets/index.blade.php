@@ -3,8 +3,16 @@
         <div class="space-y-6">
             <!-- Header -->
             <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6">
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Ferry Ticket Management</h1>
-                <p class="text-gray-600 dark:text-gray-400">Manage all ferry tickets in the system.</p>
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Ferry Ticket Management</h1>
+                        <p class="text-gray-600 dark:text-gray-400">View all ferry tickets in the system (read-only mode).</p>
+                    </div>
+                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center px-3 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        ← Back to Dashboard
+                    </a>
+
+                </div>
             </div>
 
             <!-- Tickets Table -->
@@ -68,7 +76,7 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <button class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-3">View</button>
+                                        <a href="{{ route('admin.ferry.tickets.show', $ticket->id) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-3">View</a>
                                         <button class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300">Cancel</button>
                                     </td>
                                 </tr>

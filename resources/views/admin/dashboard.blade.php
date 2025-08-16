@@ -7,7 +7,7 @@
                     Welcome back, {{ Auth::user()->name }}!
                 </h1>
                 <p class="text-gray-600 dark:text-gray-400">
-                    Here's an overview of your resort management system.
+                    Here's an overview of your resort management system. You have view-only access to monitor all activities.
                 </p>
             </div>
 
@@ -15,69 +15,81 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Total Users -->
                 <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Users</p>
+                                <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ $stats['total_users'] }}</p>
                             </div>
                         </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Users</p>
-                            <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ $stats['total_users'] }}</p>
-                        </div>
+                        <a href="{{ route('admin.users.index') }}" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">View All →</a>
                     </div>
                 </div>
 
                 <!-- Total Bookings -->
                 <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Bookings</p>
+                                <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ $stats['total_bookings'] }}</p>
                             </div>
                         </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Bookings</p>
-                            <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ $stats['total_bookings'] }}</p>
-                        </div>
+                        <a href="{{ route('admin.bookings.index') }}" class="text-sm text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300">View All →</a>
                     </div>
                 </div>
 
                 <!-- Total Rooms -->
                 <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Rooms</p>
+                                <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ $stats['total_rooms'] }}</p>
                             </div>
                         </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Rooms</p>
-                            <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ $stats['total_rooms'] }}</p>
-                        </div>
+                        <a href="{{ route('admin.rooms.index') }}" class="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300">View All →</a>
                     </div>
                 </div>
 
                 <!-- Ferry Schedules -->
                 <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Ferry Schedules</p>
+                                <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ $stats['total_ferry_schedules'] }}</p>
                             </div>
                         </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Ferry Schedules</p>
-                            <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ $stats['total_ferry_schedules'] }}</p>
-                        </div>
+                        <a href="{{ route('admin.ferry.schedules') }}" class="text-sm text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300">View All →</a>
                     </div>
                 </div>
             </div>
@@ -86,7 +98,10 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Recent Bookings -->
                 <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Recent Bookings</h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Recent Bookings</h3>
+                        <a href="{{ route('admin.bookings.index') }}" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">View All →</a>
+                    </div>
                     <div class="space-y-4">
                         @forelse($stats['recent_bookings'] as $booking)
                             <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
@@ -110,7 +125,10 @@
 
                 <!-- Recent Users -->
                 <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Recent Users</h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Recent Users</h3>
+                        <a href="{{ route('admin.users.index') }}" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">View All →</a>
+                    </div>
                     <div class="space-y-4">
                         @forelse($stats['recent_users'] as $user)
                             <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">

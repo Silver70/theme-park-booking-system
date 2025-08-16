@@ -67,4 +67,20 @@ class User extends Authenticatable
     {
         return $this->hasRole('visitor');
     }
+
+    /**
+     * Get the bookings for the user.
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * Get the ferry tickets for the user.
+     */
+    public function ferryTickets()
+    {
+        return $this->hasMany(FerryTicket::class);
+    }
 }

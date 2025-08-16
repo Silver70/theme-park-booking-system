@@ -10,6 +10,8 @@ use App\Models\Room;
 use App\Models\FerrySchedule;
 use App\Models\FerryTicket;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
 
 class AdminController extends Controller
 {
@@ -104,5 +106,102 @@ class AdminController extends Controller
         ];
         
         return view('admin.reports.index', compact('menuItems', 'reports'));
+    }
+
+    // User Management Methods
+    public function showUser(User $user)
+    {
+        $menuItems = $this->menuService->getAdminMenu();
+        return view('admin.users.show', compact('menuItems', 'user'));
+    }
+
+    public function editUser(User $user)
+    {
+        $menuItems = $this->menuService->getAdminMenu();
+        return view('admin.users.edit', compact('menuItems', 'user'));
+    }
+
+    public function createUser()
+    {
+        $menuItems = $this->menuService->getAdminMenu();
+        return view('admin.users.create', compact('menuItems'));
+    }
+
+    public function storeUser(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'role' => 'required|in:visitor,hotel_owner,ferry_operator,admin',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        $user->assignRole($validated['role']);
+
+        return redirect()->route('admin.users.index')->with('success', 'User created successfully!');
+    }
+
+    public function deleteUser(User $user)
+    {
+        // Prevent admin from deleting themselves
+        if ($user->id === Auth::id()) {
+            return redirect()->route('admin.users.index')->with('error', 'You cannot delete your own account!');
+        }
+
+        $user->delete();
+
+        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully!');
+    }
+
+    public function toggleEmailVerification(User $user)
+    {
+        if ($user->email_verified_at) {
+            $user->email_verified_at = null;
+            $message = 'Email verification removed.';
+        } else {
+            $user->email_verified_at = now();
+            $message = 'Email verified successfully.';
+        }
+
+        $user->save();
+
+        return redirect()->back()->with('success', $message);
+    }
+
+
+
+    // Room Management Methods
+    public function showRoom(Room $room)
+    {
+        $menuItems = $this->menuService->getAdminMenu();
+        return view('admin.rooms.show', compact('menuItems', 'room'));
+    }
+
+
+
+    // Booking Management Methods
+    public function showBooking(Booking $booking)
+    {
+        $menuItems = $this->menuService->getAdminMenu();
+        return view('admin.bookings.show', compact('menuItems', 'booking'));
+    }
+
+    // Ferry Management Methods
+    public function showFerrySchedule(FerrySchedule $schedule)
+    {
+        $menuItems = $this->menuService->getAdminMenu();
+        return view('admin.ferry.schedules.show', compact('menuItems', 'schedule'));
+    }
+
+    public function showFerryTicket(FerryTicket $ticket)
+    {
+        $menuItems = $this->menuService->getAdminMenu();
+        return view('admin.ferry.tickets.show', compact('menuItems', 'ticket'));
     }
 } 

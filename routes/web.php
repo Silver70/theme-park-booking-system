@@ -50,11 +50,30 @@ Route::middleware(['auth', 'role:ferry_operator'])->group(function () {
 // Admin routes
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard'])->name('admin.dashboard');
+    
+    // Users Management
     Route::get('/admin/users', [App\Http\Controllers\AdminController::class, 'users'])->name('admin.users.index');
+    Route::get('/admin/users/create', [App\Http\Controllers\AdminController::class, 'createUser'])->name('admin.users.create');
+    Route::post('/admin/users', [App\Http\Controllers\AdminController::class, 'storeUser'])->name('admin.users.store');
+    Route::get('/admin/users/{user}', [App\Http\Controllers\AdminController::class, 'showUser'])->name('admin.users.show');
+    Route::get('/admin/users/{user}/edit', [App\Http\Controllers\AdminController::class, 'editUser'])->name('admin.users.edit');
+    Route::delete('/admin/users/{user}', [App\Http\Controllers\AdminController::class, 'deleteUser'])->name('admin.users.destroy');
+    Route::patch('/admin/users/{user}/toggle-verification', [App\Http\Controllers\AdminController::class, 'toggleEmailVerification'])->name('admin.users.toggle-verification');
+    
+    // Rooms Management
     Route::get('/admin/rooms', [App\Http\Controllers\AdminController::class, 'rooms'])->name('admin.rooms.index');
+    Route::get('/admin/rooms/{room}', [App\Http\Controllers\AdminController::class, 'showRoom'])->name('admin.rooms.show');
+    
+    // Bookings Management
     Route::get('/admin/bookings', [App\Http\Controllers\AdminController::class, 'bookings'])->name('admin.bookings.index');
+    Route::get('/admin/bookings/{booking}', [App\Http\Controllers\AdminController::class, 'showBooking'])->name('admin.bookings.show');
+    
+    // Ferry Management
     Route::get('/admin/ferry/schedules', [App\Http\Controllers\AdminController::class, 'ferrySchedules'])->name('admin.ferry.schedules');
+    Route::get('/admin/ferry/schedules/{schedule}', [App\Http\Controllers\AdminController::class, 'showFerrySchedule'])->name('admin.ferry.schedules.show');
     Route::get('/admin/ferry/tickets', [App\Http\Controllers\AdminController::class, 'ferryTickets'])->name('admin.ferry.tickets');
+    Route::get('/admin/ferry/tickets/{ticket}', [App\Http\Controllers\AdminController::class, 'showFerryTicket'])->name('admin.ferry.tickets.show');
+    
     Route::get('/admin/reports', [App\Http\Controllers\AdminController::class, 'reports'])->name('admin.reports.index');
     
     // Dashboard Images Management

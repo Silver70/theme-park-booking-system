@@ -11,6 +11,12 @@ class FerryTicket extends Model
         'booking_id',
         'ferry_schedule_id',
         'price',
+        'is_used',
+    ];
+
+    protected $casts = [
+        'is_used' => 'boolean',
+        'price' => 'float',
     ];
     
     public function ferrySchedule()
