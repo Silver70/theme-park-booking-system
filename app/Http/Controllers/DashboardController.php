@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\MenuService;
 use App\Models\FerrySchedule;
 use App\Models\FerryTicket;
+use App\Models\FerryTicketRequest;
 use App\Models\Booking;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -38,7 +39,7 @@ class DashboardController extends Controller
     public function ferrySchedules()
     {
         $menuItems = $this->menuService->getFerryOperatorMenu();
-        $schedules = FerrySchedule::orderBy('created_at', 'desc')
+        $schedules = FerrySchedule::orderBy('departure_time', 'asc')
             ->paginate(10);
         
         // Add fresh capacity data to each schedule
@@ -48,6 +49,16 @@ class DashboardController extends Controller
             $schedule->fresh_remaining_capacity = $schedule->seats_available - $ticketCount;
             $schedule->fresh_capacity_display = $ticketCount . '/' . $schedule->seats_available;
             $schedule->fresh_is_full = $ticketCount >= $schedule->seats_available;
+            
+            // Add status based on departure time and cancellation
+            if ($schedule->cancelled_at) {
+                $schedule->status = 'cancelled';
+            } elseif ($schedule->departure_time < now()) {
+                $schedule->status = 'completed';
+            } else {
+                $schedule->status = 'scheduled';
+            }
+            
             return $schedule;
         });
         
@@ -105,6 +116,85 @@ class DashboardController extends Controller
         $schedule->cancelled_at = now();
         $schedule->save();
         return redirect()->route('ferry.schedules')->with('success', 'Ferry schedule cancelled successfully!');
+    }
+
+    /**
+     * Show ferry ticket requests for validation
+     */
+    public function ferryTicketRequests()
+    {
+        $menuItems = $this->menuService->getFerryOperatorMenu();
+        
+        $requests = FerryTicketRequest::with(['user', 'booking', 'ferrySchedule'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+        
+        return view('ferry.requests.index', compact('menuItems', 'requests'));
+    }
+
+    /**
+     * Approve a ferry ticket request
+     */
+    public function approveRequest($id)
+    {
+        $request = FerryTicketRequest::findOrFail($id);
+        
+        // Check if user has a valid hotel booking
+        $booking = $request->booking;
+        if (!$booking || $booking->check_out_date < now()) {
+            return redirect()->back()
+                ->withErrors(['error' => 'User does not have a valid hotel booking.']);
+        }
+        
+        // Check ferry schedule capacity
+        $schedule = $request->ferrySchedule;
+        $currentTicketCount = FerryTicket::where('ferry_schedule_id', $schedule->id)->count();
+        $remainingCapacity = $schedule->seats_available - $currentTicketCount;
+        
+        if ($remainingCapacity < $request->quantity) {
+            return redirect()->back()
+                ->withErrors(['error' => 'Not enough seats available for this schedule.']);
+        }
+        
+        // Create ferry tickets
+        for ($i = 0; $i < $request->quantity; $i++) {
+            FerryTicket::create([
+                'user_id' => $request->user_id,
+                'booking_id' => $request->booking_id,
+                'ferry_schedule_id' => $request->ferry_schedule_id,
+                'price' => $request->total_price / $request->quantity,
+                'is_used' => false,
+            ]);
+        }
+        
+        // Update request status
+        $request->update([
+            'status' => FerryTicketRequest::STATUS_APPROVED,
+            'approved_by' => Auth::id(),
+            'approved_at' => now(),
+        ]);
+        
+        return redirect()->back();
+    }
+
+    /**
+     * Deny a ferry ticket request
+     */
+    public function denyRequest(Request $request, $id)
+    {
+        $ticketRequest = FerryTicketRequest::findOrFail($id);
+        
+        $request->validate([
+            'denial_reason' => 'required|string|max:500',
+        ]);
+        
+        $ticketRequest->update([
+            'status' => FerryTicketRequest::STATUS_DENIED,
+            'denial_reason' => $request->denial_reason,
+            'denied_at' => now(),
+        ]);
+        
+        return redirect()->back();
     }
 
     public function ferryTickets()

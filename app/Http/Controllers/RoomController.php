@@ -60,8 +60,22 @@ class RoomController extends Controller
             'check_out_date' => $request->check_out_date,
         ]);
 
-        return redirect()->route('visitor-dashboard')
-            ->with('success', 'Booking created successfully! Your room has been reserved.');
+        return redirect()->route('bookings.confirmation', $booking->id);
+    }
+
+    /**
+     * Show booking confirmation page
+     */
+    public function confirmation($id)
+    {
+        $booking = Booking::with(['user', 'room'])->findOrFail($id);
+        
+        // Ensure the user can only view their own booking
+        if ($booking->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        
+        return view('bookings.confirmation', compact('booking'));
     }
 
     public function checkAvailability(Request $request)

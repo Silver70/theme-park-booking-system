@@ -6,7 +6,7 @@ namespace App\Services;
 class MenuService
 {
     /**
-     * Get admin dashboard menu items
+     * Get hotel menu items
      *
      * @return array
      */
@@ -21,13 +21,8 @@ class MenuService
             [
                 'name' => 'Attractions',
                 'icon' => 'rooms',
-                // 'children' => [
-                //     ['name' => 'View All', 'route' => 'dashboard'],
-                //     ['name' => 'Add All', 'route' => 'dashboard'],
-                // ]
                 'route' => 'dashboard',
             ],
-            
             [
                 'name' => 'Analytics',
                 'icon' => 'chart',
@@ -37,7 +32,7 @@ class MenuService
     }
 
     /**
-     * Get staff dashboard menu items
+     * Get ferry operator menu items
      *
      * @return array
      */
@@ -48,6 +43,11 @@ class MenuService
                 'name' => 'Schedules',
                 'icon' => 'calendar',
                 'route' => 'ferry.schedules',
+            ],
+            [
+                'name' => 'Ticket Requests',
+                'icon' => 'users',
+                'route' => 'ferry.requests',
             ],
             [
                 'name' => 'Ticket Validation',
@@ -127,6 +127,11 @@ class MenuService
         ];
     }
 
+    /**
+     * Get hotel staff menu items
+     *
+     * @return array
+     */
     public function getHotelStaffMenu(): array
     {
         return [
