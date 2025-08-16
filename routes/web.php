@@ -56,6 +56,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/ferry/schedules', [App\Http\Controllers\AdminController::class, 'ferrySchedules'])->name('admin.ferry.schedules');
     Route::get('/admin/ferry/tickets', [App\Http\Controllers\AdminController::class, 'ferryTickets'])->name('admin.ferry.tickets');
     Route::get('/admin/reports', [App\Http\Controllers\AdminController::class, 'reports'])->name('admin.reports.index');
+    
+    // Dashboard Images Management
+    Route::resource('/admin/dashboard-images', App\Http\Controllers\AdminDashboardImageController::class, ['as' => 'admin']);
+    Route::patch('/admin/dashboard-images/{dashboardImage}/toggle-status', [App\Http\Controllers\AdminDashboardImageController::class, 'toggleStatus'])->name('admin.dashboard-images.toggle-status');
 });
 
 // Route for visitors to assign ferry schedules to their tickets

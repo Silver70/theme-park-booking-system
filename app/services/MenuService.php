@@ -109,6 +109,13 @@ class MenuService
                 ]
             ],
             [
+                'name' => 'Content Management',
+                'icon' => 'radix-image',
+                'children' => [
+                    ['name' => 'Dashboard Images', 'route' => 'admin.dashboard-images.index'],
+                ]
+            ],
+            [
                 'name' => 'Reports',
                 'icon' => 'radix-bar-chart',
                 'route' => 'admin.reports.index',

@@ -23,24 +23,38 @@
 
                     <h1 class="text-2xl font-bold mb-4">Welcome {{ Auth::user()->name }}!</h1>
                     
-                    <!-- Top Dashboard Images -->
-                    @if(isset($dashboardImages['top']) && $dashboardImages['top']->count() > 0)
+                    <!-- Advertisements Section -->
+                    @php
+                        $advertisements = \App\Models\Advertisement::active()->where('position', 'main')->latest()->take(2)->get();
+                    @endphp
+                    
+                    @if($advertisements->count() > 0)
                         <div class="mb-8">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                @foreach($dashboardImages['top'] as $image)
-                                    <div class="bg-white dark:bg-gray-700 rounded-lg overflow-hidden shadow-sm">
-                                        <img src="{{ Storage::url($image->image_path) }}" 
-                                             alt="{{ $image->title }}" 
+                            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Special Offers & Promotions</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                @foreach($advertisements as $ad)
+                                    <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg border border-purple-200 dark:border-purple-700 overflow-hidden">
+                                        @if($ad->link_url)
+                                            <a href="{{ $ad->link_url }}" target="_blank" class="block hover:opacity-90 transition-opacity">
+                                        @endif
+                                        
+                                        <img src="{{ Storage::url($ad->image_path) }}" 
+                                             alt="{{ $ad->title }}" 
                                              class="w-full h-48 object-cover">
-                                        @if($image->title || $image->description)
-                                            <div class="p-4">
-                                                @if($image->title)
-                                                    <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2">{{ $image->title }}</h3>
-                                                @endif
-                                                @if($image->description)
-                                                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ $image->description }}</p>
-                                                @endif
-                                            </div>
+                                        
+                                        <div class="p-4">
+                                            <h3 class="text-lg font-semibold text-purple-800 dark:text-purple-200 mb-2">
+                                                {{ $ad->title }}
+                                            </h3>
+                                            @if($ad->description)
+                                                <p class="text-purple-700 dark:text-purple-300 text-sm">
+                                                    {{ $ad->description }}
+                                                </p>
+                                            @endif
+                                        </div>
+                                        
+                                        @if($ad->link_url)
+                                            </a>
                                         @endif
                                     </div>
                                 @endforeach
@@ -156,28 +170,39 @@
                         @endif
                     @endif
 
-                    <!-- Middle Dashboard Images -->
-                    @if(isset($dashboardImages['middle']) && $dashboardImages['middle']->count() > 0)
+                    <!-- Sidebar Advertisements -->
+                    @php
+                        $sidebarAds = \App\Models\Advertisement::active()->where('position', 'sidebar')->latest()->take(1)->get();
+                    @endphp
+                    
+                    @if($sidebarAds->count() > 0)
                         <div class="mb-8">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                @foreach($dashboardImages['middle'] as $image)
-                                    <div class="bg-white dark:bg-gray-700 rounded-lg overflow-hidden shadow-sm">
-                                        <img src="{{ Storage::url($image->image_path) }}" 
-                                             alt="{{ $image->title }}" 
-                                             class="w-full h-48 object-cover">
-                                        @if($image->title || $image->description)
-                                            <div class="p-4">
-                                                @if($image->title)
-                                                    <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2">{{ $image->title }}</h3>
-                                                @endif
-                                                @if($image->description)
-                                                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ $image->description }}</p>
-                                                @endif
-                                            </div>
+                            @foreach($sidebarAds as $ad)
+                                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg border border-blue-200 dark:border-blue-700 overflow-hidden">
+                                    @if($ad->link_url)
+                                        <a href="{{ $ad->link_url }}" target="_blank" class="block hover:opacity-90 transition-opacity">
+                                    @endif
+                                    
+                                    <img src="{{ Storage::url($ad->image_path) }}" 
+                                         alt="{{ $ad->title }}" 
+                                         class="w-full h-32 object-cover">
+                                    
+                                    <div class="p-4">
+                                        <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-2">
+                                            {{ $ad->title }}
+                                        </h3>
+                                        @if($ad->description)
+                                            <p class="text-blue-700 dark:text-blue-300 text-sm">
+                                                {{ $ad->description }}
+                                            </p>
                                         @endif
                                     </div>
-                                @endforeach
-                            </div>
+                                    
+                                    @if($ad->link_url)
+                                        </a>
+                                    @endif
+                                </div>
+                            @endforeach
                         </div>
                     @endif
 
@@ -209,31 +234,6 @@
                             </a>
                         </div>
                     </div>
-
-                    <!-- Bottom Dashboard Images -->
-                    @if(isset($dashboardImages['bottom']) && $dashboardImages['bottom']->count() > 0)
-                        <div class="mb-8">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                @foreach($dashboardImages['bottom'] as $image)
-                                    <div class="bg-white dark:bg-gray-700 rounded-lg overflow-hidden shadow-sm">
-                                        <img src="{{ Storage::url($image->image_path) }}" 
-                                             alt="{{ $image->title }}" 
-                                             class="w-full h-48 object-cover">
-                                        @if($image->title || $image->description)
-                                            <div class="p-4">
-                                                @if($image->title)
-                                                    <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2">{{ $image->title }}</h3>
-                                                @endif
-                                                @if($image->description)
-                                                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ $image->description }}</p>
-                                                @endif
-                                            </div>
-                                        @endif
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
 
                     <div class="mt-8 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                         <h3 class="text-lg font-semibold mb-3">Quick Actions</h3>

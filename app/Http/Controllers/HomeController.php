@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\FerryTicket;
 use App\Models\FerrySchedule;
+use App\Models\DashboardImage;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -54,12 +55,19 @@ class HomeController extends Controller
             return redirect()->route('rooms.index');
         }
         
+        // Get active dashboard images
+        $dashboardImages = DashboardImage::active()
+            ->ordered()
+            ->get()
+            ->groupBy('display_position');
+        
         return view('home', compact(
             'booking', 
             'ferryTicket', 
             'hasFerryPass', 
             'ferryPassAssigned', 
-            'availableSchedules'
+            'availableSchedules',
+            'dashboardImages'
         ));
     }
 } 
