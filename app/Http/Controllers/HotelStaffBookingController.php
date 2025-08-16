@@ -29,7 +29,7 @@ class HotelStaffBookingController extends Controller
     {
         $menuItems = $this->menuService->getHotelStaffMenu();
         $rooms = Room::all();
-        $users = User::all();
+        $users = User::role('visitor')->get();
         return view('hotelstaff.bookings.create', compact('menuItems', 'rooms', 'users'));
     }
 
@@ -50,7 +50,7 @@ class HotelStaffBookingController extends Controller
         $menuItems = $this->menuService->getHotelStaffMenu();
         $booking = Booking::findOrFail($id);
         $rooms = Room::all();
-        $users = User::all();
+        $users = User::role('visitor')->get();
         return view('hotelstaff.bookings.edit', compact('menuItems', 'booking', 'rooms', 'users'));
     }
 

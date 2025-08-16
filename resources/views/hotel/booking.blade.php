@@ -186,9 +186,24 @@
                                 <div class="flex flex-col md:flex-row">
                                     <!-- Room Image -->
                                     <div class="md:w-1/3 h-64 md:h-auto">
-                                        <img src="{{ asset('images/' . $room->image) }}" 
-                                             alt="{{ $room->name }}" 
-                                             class="w-full h-full object-cover">
+                                        @if($room->image)
+                                            @if(str_starts_with($room->image, 'http'))
+                                                {{-- External URL image --}}
+                                                <img src="{{ $room->image }}" 
+                                                     alt="{{ $room->name }}" 
+                                                     class="w-full h-full object-cover">
+                                            @else
+                                                {{-- Uploaded file image --}}
+                                                <img src="{{ asset('storage/' . $room->image) }}" 
+                                                     alt="{{ $room->name }}" 
+                                                     class="w-full h-full object-cover">
+                                            @endif
+                                        @else
+                                            {{-- Default placeholder when no image --}}
+                                            <div class="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                                                <span class="text-white text-lg font-semibold">{{ $room->name }}</span>
+                                            </div>
+                                        @endif
                                     </div>
                                     
                                     <!-- Room Details -->

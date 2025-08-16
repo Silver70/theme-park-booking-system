@@ -38,9 +38,20 @@
                 @foreach($rooms as $room)
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg border border-gray-200 dark:border-gray-700">
                         <div class="aspect-w-16 aspect-h-9 bg-gray-200 dark:bg-gray-700">
-                            <div class="flex items-center justify-center h-48 bg-gradient-to-br from-blue-400 to-purple-500">
-                                <span class="text-white text-lg font-semibold">{{ $room->name }}</span>
-                            </div>
+                            @if($room->image)
+                                @if(str_starts_with($room->image, 'http'))
+                                    {{-- External URL image --}}
+                                    <img src="{{ $room->image }}" alt="{{ $room->name }}" class="w-full h-48 object-cover">
+                                @else
+                                    {{-- Uploaded file image --}}
+                                    <img src="{{ asset('storage/' . $room->image) }}" alt="{{ $room->name }}" class="w-full h-48 object-cover">
+                                @endif
+                            @else
+                                {{-- Default placeholder when no image --}}
+                                <div class="flex items-center justify-center h-48 bg-gradient-to-br from-blue-400 to-purple-500">
+                                    <span class="text-white text-lg font-semibold">{{ $room->name }}</span>
+                                </div>
+                            @endif
                         </div>
                         
                         <div class="p-6">

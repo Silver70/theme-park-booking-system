@@ -4,7 +4,20 @@
 
 <div class="max-w-xl bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
     <a href="#">
-        <img class="rounded-t-lg" src="{{asset('images/'.$room->image)}}" alt="" />
+        @if($room->image)
+            @if(str_starts_with($room->image, 'http'))
+                {{-- External URL image --}}
+                <img class="rounded-t-lg h-48 w-full object-cover" src="{{ $room->image }}" alt="{{ $room->name }}" />
+            @else
+                {{-- Uploaded file image --}}
+                <img class="rounded-t-lg h-48 w-full object-cover" src="{{ asset('storage/' . $room->image) }}" alt="{{ $room->name }}" />
+            @endif
+        @else
+            {{-- Default placeholder when no image --}}
+            <div class="rounded-t-lg h-48 w-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                <span class="text-white text-lg font-semibold">{{ $room->name }}</span>
+            </div>
+        @endif
     </a>
     <div class="p-5">
         <a href="#">

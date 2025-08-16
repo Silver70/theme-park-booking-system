@@ -33,10 +33,19 @@ class HotelStaffRoomController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'price' => 'required|numeric|min:0',
         ]);
-        Room::create($request->only(['name', 'description', 'image', 'price']));
+
+        $data = $request->only(['name', 'description', 'price']);
+        
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('room-images', 'public');
+            $data['image'] = $imagePath;
+        }
+
+        Room::create($data);
         return redirect()->route('hotelstaff.rooms.index')->with('success', 'Room created successfully.');
     }
 
@@ -53,10 +62,24 @@ class HotelStaffRoomController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'price' => 'required|numeric|min:0',
         ]);
-        $room->update($request->only(['name', 'description', 'image', 'price']));
+
+        $data = $request->only(['name', 'description', 'price']);
+        
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($room->image && \Storage::disk('public')->exists($room->image)) {
+                \Storage::disk('public')->delete($room->image);
+            }
+            
+            $imagePath = $request->file('image')->store('room-images', 'public');
+            $data['image'] = $imagePath;
+        }
+
+        $room->update($data);
         return redirect()->route('hotelstaff.rooms.index')->with('success', 'Room updated successfully.');
     }
 

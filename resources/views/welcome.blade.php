@@ -105,8 +105,14 @@
                     @foreach($rooms->take(3) as $room)
                         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                             <div class="h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-                                @if($room->image && file_exists(public_path('images/'.$room->image)))
-                                    <img src="{{ asset('images/'.$room->image) }}" alt="{{ $room->name }}" class="w-full h-full object-cover">
+                                @if($room->image)
+                                    @if(str_starts_with($room->image, 'http'))
+                                        {{-- External URL image --}}
+                                        <img src="{{ $room->image }}" alt="{{ $room->name }}" class="w-full h-full object-cover">
+                                    @else
+                                        {{-- Uploaded file image --}}
+                                        <img src="{{ asset('storage/' . $room->image) }}" alt="{{ $room->name }}" class="w-full h-full object-cover">
+                                    @endif
                                 @else
                                     <span class="text-white text-lg font-semibold">{{ $room->name }}</span>
                                 @endif
