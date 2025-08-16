@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     $rooms = Room::all()->take(3);
-    return view('home', compact('rooms'));
+    return view('welcome', compact('rooms'));
 });
 
 Route::get('/hotel/booking', function () {
