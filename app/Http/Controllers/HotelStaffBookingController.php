@@ -7,6 +7,7 @@ use App\Services\MenuService;
 use App\Models\Booking;
 use App\Models\Room;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class HotelStaffBookingController extends Controller
 {
@@ -66,10 +67,27 @@ class HotelStaffBookingController extends Controller
         return redirect()->route('hotelstaff.bookings.index')->with('success', 'Booking updated successfully.');
     }
 
+    public function confirm($id)
+    {
+        $booking = Booking::findOrFail($id);
+        
+        if (!$booking->canBeConfirmed()) {
+            return redirect()->route('hotelstaff.bookings.index')->with('error', 'This booking cannot be confirmed.');
+        }
+        
+        $booking->update([
+            'booking_status' => 'confirmed',
+            'confirmed_at' => now(),
+            'confirmed_by' => Auth::id(),
+        ]);
+        
+        return redirect()->route('hotelstaff.bookings.index')->with('success', 'Booking confirmed successfully.');
+    }
+
     public function destroy($id)
     {
         $booking = Booking::findOrFail($id);
-        $booking->delete();
+        $booking->update(['booking_status' => 'cancelled']);
         return redirect()->route('hotelstaff.bookings.index')->with('success', 'Booking cancelled successfully.');
     }
 } 

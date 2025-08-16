@@ -24,6 +24,9 @@
                                                 <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
                                                     {{ $booking->room->name }}
                                                 </h3>
+                                                <span class="px-2 py-1 text-xs font-medium rounded-full {{ $booking->booking_status_color }}">
+                                                    {{ $booking->booking_status_text }}
+                                                </span>
                                                 <span class="px-2 py-1 text-xs font-medium rounded-full 
                                                     @if($booking->check_out_date >= now())
                                                         bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100
@@ -58,16 +61,25 @@
                                                         <strong>Booking Reference:</strong> #{{ $booking->id }}
                                                     </p>
                                                     <p class="text-gray-600 dark:text-gray-400">
-                                                        <strong>Status:</strong> {{ ucfirst($booking->status) }}
+                                                        <strong>Stay Status:</strong> {{ ucfirst($booking->status) }}
                                                     </p>
+                                                    @if($booking->booking_status === 'confirmed' && $booking->confirmed_at)
+                                                        <p class="text-gray-600 dark:text-gray-400">
+                                                            <strong>Confirmed:</strong> {{ $booking->confirmed_at->format('M d, Y \a\t g:i A') }}
+                                                        </p>
+                                                    @endif
                                                 </div>
                                             </div>
 
-                                            @if($booking->ferryTickets->count() > 0)
-                                                <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded border border-blue-200 dark:border-blue-700">
-                                                    <h4 class="font-medium text-blue-800 dark:text-blue-200 mb-2">Ferry Tickets</h4>
+                                            @php
+                                                $ferryStatus = $booking->ferry_request_status;
+                                            @endphp
+                                            
+                                            @if($ferryStatus == 'has_tickets')
+                                                <div class="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded border border-green-200 dark:border-green-700">
+                                                    <h4 class="font-medium text-green-800 dark:text-green-200 mb-2">✅ Ferry Tickets Issued</h4>
                                                     @foreach($booking->ferryTickets as $ticket)
-                                                        <div class="text-sm text-blue-700 dark:text-blue-300">
+                                                        <div class="text-sm text-green-700 dark:text-green-300">
                                                             @if($ticket->ferrySchedule)
                                                                 <strong>Schedule:</strong> {{ $ticket->ferrySchedule->departure_time->format('M d, g:i A') }} 
                                                                 ({{ $ticket->ferrySchedule->origin }} → {{ $ticket->ferrySchedule->destination }})
@@ -76,6 +88,16 @@
                                                             @endif
                                                         </div>
                                                     @endforeach
+                                                </div>
+                                            @elseif($ferryStatus == 'pending_request')
+                                                <div class="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded border border-yellow-200 dark:border-yellow-700">
+                                                    <h4 class="font-medium text-yellow-800 dark:text-yellow-200 mb-1">⏳ Ferry Request Pending</h4>
+                                                    <p class="text-sm text-yellow-700 dark:text-yellow-300">Your ferry ticket request is being reviewed by our operators.</p>
+                                                </div>
+                                            @elseif($ferryStatus == 'approved_request')
+                                                <div class="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded border border-green-200 dark:border-green-700">
+                                                    <h4 class="font-medium text-green-800 dark:text-green-200 mb-1">✅ Ferry Request Approved</h4>
+                                                    <p class="text-sm text-green-700 dark:text-green-300">Your request has been approved! Ferry tickets will be issued shortly.</p>
                                                 </div>
                                             @endif
                                         </div>
@@ -86,10 +108,31 @@
                                                 View Details
                                             </a>
                                             @if($booking->check_out_date >= now())
-                                                <a href="{{ route('ferry.request') }}" 
-                                                   class="inline-flex items-center px-3 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                                    Request Ferry
-                                                </a>
+                                                @php
+                                                    $ferryStatus = $booking->ferry_request_status;
+                                                @endphp
+                                                
+                                                @if($ferryStatus == 'has_tickets')
+                                                    <a href="{{ route('ferry.my-requests') }}" 
+                                                       class="inline-flex items-center px-3 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                                        View Ferry Tickets
+                                                    </a>
+                                                @elseif($ferryStatus == 'pending_request')
+                                                    <a href="{{ route('ferry.my-requests') }}" 
+                                                       class="inline-flex items-center px-3 py-2 bg-yellow-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-700 focus:bg-yellow-700 active:bg-yellow-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                                        View Pending Request
+                                                    </a>
+                                                @elseif($ferryStatus == 'approved_request')
+                                                    <a href="{{ route('ferry.my-requests') }}" 
+                                                       class="inline-flex items-center px-3 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                                        View Approved Request
+                                                    </a>
+                                                @else
+                                                    <a href="{{ route('ferry.request') }}" 
+                                                       class="inline-flex items-center px-3 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                                        Request Ferry Tickets
+                                                    </a>
+                                                @endif
                                             @endif
                                         </div>
                                     </div>

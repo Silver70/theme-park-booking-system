@@ -112,8 +112,14 @@ class HomeController extends Controller
                 ->with('error', 'You need a valid hotel booking to view ferry schedules.');
         }
         
+        // Filter schedules to dates relevant to the user's stay
+        // Show schedules from 1 day before check-in to 1 day after check-out
+        $startDate = $booking->check_in_date->copy()->subDay();
+        $endDate = $booking->check_out_date->copy()->addDay();
+        
         $schedules = FerrySchedule::whereNull('cancelled_at')
             ->where('departure_time', '>', now())
+            ->whereBetween('departure_time', [$startDate, $endDate])
             ->orderBy('departure_time', 'asc')
             ->get()
             ->map(function ($schedule) {
@@ -143,9 +149,15 @@ class HomeController extends Controller
                 ->with('error', 'You need a valid hotel booking to request ferry tickets.');
         }
         
+        // Filter schedules to dates relevant to the user's stay
+        // Show schedules from 1 day before check-in to 1 day after check-out
+        $startDate = $booking->check_in_date->copy()->subDay();
+        $endDate = $booking->check_out_date->copy()->addDay();
+        
         // Get available schedules
         $schedules = FerrySchedule::whereNull('cancelled_at')
             ->where('departure_time', '>', now())
+            ->whereBetween('departure_time', [$startDate, $endDate])
             ->orderBy('departure_time', 'asc')
             ->get()
             ->filter(function ($schedule) {
@@ -257,7 +269,7 @@ class HomeController extends Controller
         $user = Auth::user();
         
         // Get all bookings for the current user
-        $bookings = Booking::with(['room', 'ferryTickets.ferrySchedule'])
+        $bookings = Booking::with(['room', 'ferryTickets.ferrySchedule', 'ferryTicketRequests'])
             ->where('user_id', $user->id)
             ->orderBy('check_in_date', 'desc')
             ->paginate(10);
@@ -265,88 +277,5 @@ class HomeController extends Controller
         return view('bookings.my-bookings', compact('bookings'));
     }
 
-    /**
-     * Show ferry ticket purchase form
-     */
-    public function purchaseTickets()
-    {
-        $user = Auth::user();
-        
-        // Check if user has a valid hotel booking
-        $booking = Booking::where('user_id', $user->id)
-            ->where('check_out_date', '>=', now())
-            ->first();
-            
-        if (!$booking) {
-            return redirect()->route('rooms.index')
-                ->with('error', 'You need a valid hotel booking to purchase ferry tickets.');
-        }
-        
-        // Get available schedules
-        $schedules = FerrySchedule::whereNull('cancelled_at')
-            ->where('departure_time', '>', now())
-            ->orderBy('departure_time', 'asc')
-            ->get()
-            ->filter(function ($schedule) {
-                $ticketCount = FerryTicket::where('ferry_schedule_id', $schedule->id)->count();
-                $remainingCapacity = $schedule->seats_available - $ticketCount;
-                $schedule->remaining_capacity = $remainingCapacity;
-                return $remainingCapacity > 0;
-            });
-        
-        return view('ferry.purchase', compact('schedules', 'booking'));
-    }
 
-    /**
-     * Store ferry ticket purchase
-     */
-    public function storePurchase(Request $request)
-    {
-        $user = Auth::user();
-        
-        // Validate request
-        $request->validate([
-            'ferry_schedule_id' => 'required|exists:ferry_schedules,id',
-            'quantity' => 'required|integer|min:1|max:5',
-        ]);
-        
-        // Check if user has a valid hotel booking
-        $booking = Booking::where('user_id', $user->id)
-            ->where('check_out_date', '>=', now())
-            ->first();
-            
-        if (!$booking) {
-            return redirect()->route('rooms.index')
-                ->with('error', 'You need a valid hotel booking to purchase ferry tickets.');
-        }
-        
-        // Get ferry schedule and check capacity
-        $schedule = FerrySchedule::findOrFail($request->ferry_schedule_id);
-        $currentTicketCount = FerryTicket::where('ferry_schedule_id', $schedule->id)->count();
-        $remainingCapacity = $schedule->seats_available - $currentTicketCount;
-        
-        if ($remainingCapacity < $request->quantity) {
-            return redirect()->back()
-                ->withErrors(['quantity' => "Only {$remainingCapacity} seats available for this schedule."])
-                ->withInput();
-        }
-        
-        // Calculate total price (assuming $25 per ticket)
-        $pricePerTicket = 25.00;
-        $totalPrice = $pricePerTicket * $request->quantity;
-        
-        // Create ferry tickets directly (instant purchase)
-        for ($i = 0; $i < $request->quantity; $i++) {
-            FerryTicket::create([
-                'user_id' => $user->id,
-                'booking_id' => $booking->id,
-                'ferry_schedule_id' => $schedule->id,
-                'price' => $pricePerTicket,
-                'is_used' => false,
-            ]);
-        }
-        
-        return redirect()->route('visitor-dashboard')
-            ->with('success', "Ferry tickets purchased successfully! You have purchased {$request->quantity} ticket(s) for the ferry departing on " . $schedule->departure_time->format('M j, Y \a\t g:i A') . " from {$schedule->origin} to {$schedule->destination}. Total cost: $" . number_format($totalPrice, 2));
-    }
 } 

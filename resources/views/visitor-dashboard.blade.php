@@ -65,7 +65,25 @@
                     @if($booking)
                         <!-- Booking Information -->
                         <div class="mb-8 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
-                            <h2 class="text-xl font-semibold text-blue-800 dark:text-blue-200 mb-4">Your Current Booking</h2>
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-xl font-semibold text-blue-800 dark:text-blue-200">Your Current Booking</h2>
+                                <span class="px-3 py-1 text-sm font-medium rounded-full {{ $booking->booking_status_color }}">
+                                    {{ $booking->booking_status_text }}
+                                </span>
+                            </div>
+                            @if($booking->booking_status === 'pending')
+                                <div class="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded border border-yellow-200 dark:border-yellow-700">
+                                    <p class="text-yellow-800 dark:text-yellow-200 text-sm">
+                                        <strong>Note:</strong> Your booking is pending confirmation from hotel staff. You will be notified once it's confirmed.
+                                    </p>
+                                </div>
+                            @elseif($booking->booking_status === 'confirmed' && $booking->confirmed_at)
+                                <div class="mb-4 p-3 bg-green-50 dark:bg-green-900/20 rounded border border-green-200 dark:border-green-700">
+                                    <p class="text-green-800 dark:text-green-200 text-sm">
+                                        <strong>Confirmed:</strong> Your booking was confirmed on {{ $booking->confirmed_at->format('M d, Y \a\t g:i A') }}
+                                    </p>
+                                </div>
+                            @endif
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <h3 class="font-semibold text-blue-700 dark:text-blue-300">Room Details</h3>

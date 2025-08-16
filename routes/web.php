@@ -122,9 +122,7 @@ Route::middleware(['auth', 'role:visitor'])->group(function () {
     Route::post('/ferry/request', [App\Http\Controllers\HomeController::class, 'submitRequest'])->name('ferry.submit-request');
     Route::get('/ferry/my-requests', [App\Http\Controllers\HomeController::class, 'myRequests'])->name('ferry.my-requests');
     
-    // Ferry ticket purchase routes for visitors
-    Route::get('/ferry/purchase', [App\Http\Controllers\HomeController::class, 'purchaseTickets'])->name('ferry.purchase');
-    Route::post('/ferry/purchase', [App\Http\Controllers\HomeController::class, 'storePurchase'])->name('ferry.store-ticket');
+
     
    
     // Room booking routes (viewing routes moved to public section above)
@@ -145,6 +143,7 @@ Route::middleware(['auth', 'role:hotel_staff'])->prefix('hotelstaff')->group(fun
     Route::get('/dashboard', [App\Http\Controllers\HotelStaffController::class, 'dashboard'])->name('hotelstaff.dashboard');
     Route::resource('rooms', App\Http\Controllers\HotelStaffRoomController::class, ['as' => 'hotelstaff']);
     Route::resource('bookings', App\Http\Controllers\HotelStaffBookingController::class, ['as' => 'hotelstaff']);
+    Route::patch('/bookings/{id}/confirm', [App\Http\Controllers\HotelStaffBookingController::class, 'confirm'])->name('hotelstaff.bookings.confirm');
     Route::resource('promotions', App\Http\Controllers\HotelStaffPromotionController::class, ['as' => 'hotelstaff']);
     Route::get('/reports', [App\Http\Controllers\HotelStaffController::class, 'reports'])->name('hotelstaff.reports.index');
 });

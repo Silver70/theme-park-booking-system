@@ -15,6 +15,10 @@
                     <strong>Check-in:</strong> {{ $booking->check_in_date->format('M d, Y') }} | 
                     <strong>Check-out:</strong> {{ $booking->check_out_date->format('M d, Y') }}
                 </p>
+                <div class="mt-2 p-2 bg-blue-100 dark:bg-blue-800/50 rounded text-sm text-blue-800 dark:text-blue-200">
+                    <strong>Ferry Schedules Available:</strong> Showing schedules from {{ $booking->check_in_date->copy()->subDay()->format('M d') }} to {{ $booking->check_out_date->copy()->addDay()->format('M d, Y') }} 
+                    (related to your stay dates for arrival, activities, and departure)
+                </div>
             </div>
 
             <!-- Ferry Schedules -->
@@ -22,11 +26,11 @@
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Available Ferry Schedules</h3>
-                        <a href="{{ route('ferry.purchase') }}" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        <a href="{{ route('ferry.request') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2V9a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                             </svg>
-                            Purchase Tickets
+                            Request Tickets
                         </a>
                     </div>
 
@@ -66,8 +70,8 @@
                                     
                                     @if($schedule->is_available)
                                         <div class="mt-3">
-                                            <a href="{{ route('ferry.purchase') }}?schedule={{ $schedule->id }}" class="w-full inline-flex justify-center items-center px-3 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                                Book Tickets
+                                            <a href="{{ route('ferry.request') }}?schedule={{ $schedule->id }}" class="w-full inline-flex justify-center items-center px-3 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                                Request Tickets
                                             </a>
                                         </div>
                                     @else
@@ -87,8 +91,13 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                                 </svg>
                             </div>
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No Available Schedules</h3>
-                            <p class="text-gray-500 dark:text-gray-400">There are no ferry schedules available at the moment. Please check back later.</p>
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No Ferry Schedules Available</h3>
+                            <p class="text-gray-500 dark:text-gray-400 mb-4">
+                                No ferry schedules are available for your stay dates ({{ $booking->check_in_date->copy()->subDay()->format('M d') }} - {{ $booking->check_out_date->copy()->addDay()->format('M d, Y') }}).
+                            </p>
+                            <p class="text-sm text-gray-400 dark:text-gray-500">
+                                Ferry schedules may be added closer to your check-in date, or you can contact our staff for assistance.
+                            </p>
                         </div>
                     @endif
                 </div>
