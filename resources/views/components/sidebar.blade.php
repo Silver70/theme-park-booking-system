@@ -46,14 +46,15 @@
         </nav>
 
         <!-- User Menu -->
+        @auth
         <div class="absolute bottom-0 w-full">
             <div class="px-6 py-4 border-t border-gray-700">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <img class="w-10 h-10 rounded-full" src="https://ui-avatars.com/api/?name={{ Auth::user()->name ?? 'User' }}&background=random" alt="{{ Auth::user()->name ?? 'User' }}">
+                        <img class="w-10 h-10 rounded-full" src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}&background=random" alt="{{ Auth::user()->name }}">
                     </div>
                     <div class="ml-3">
-                        <p class="text-sm font-medium text-white">{{ Auth::user()->name ?? 'User' }}</p>
+                        <p class="text-sm font-medium text-white">{{ Auth::user()->name }}</p>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="text-xs text-gray-400 hover:text-gray-300">Sign out</button>
@@ -62,6 +63,7 @@
                 </div>
             </div>
         </div>
+        @endauth
     </div>
 
     <!-- Content area -->

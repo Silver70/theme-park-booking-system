@@ -3,12 +3,28 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-
+use App\Http\Controllers\FerryScheduleController;
+use App\Http\Controllers\FerryTicketController;
+use App\Models\Room;
 use Illuminate\Support\Facades\Route;
 
+
+
 Route::get('/', function () {
-    return view('welcome');
-});
+    $rooms = Room::where('is_available', true)->take(6)->get();
+    return view('welcome', compact('rooms'));
+})->name('welcome');
+
+// Public routes for viewing schedules, map, and rooms (no booking)
+Route::get('/schedules', [FerryScheduleController::class, 'publicIndex'])->name('schedules.index');
+Route::get('/explore-map', [App\Http\Controllers\MapController::class, 'publicIndex'])->name('explore-map.index');
+Route::get('/rooms', [App\Http\Controllers\RoomController::class, 'index'])->name('rooms.index');
+Route::get('/rooms/{id}', [App\Http\Controllers\RoomController::class, 'show'])->name('rooms.show');
+
+Route::get('/hotel/booking', function () {
+    $rooms = Room::all();
+    return view('hotel.booking', compact('rooms'));
+})->name('hotel.booking');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -27,29 +43,32 @@ Route::middleware('auth')->group(function () {
 // })->middleware(['auth', 'verified'])->name('hotel.dashboard');
 
 // Route::get('/hotel/dashboard', [DashboardController::class, 'hotelDashboard'])->middleware(['auth', 'verified'])->name('hotel.dashboard');
-Route::middleware(['auth', 'role:hotel_owner'])->group(function () {
+Route::middleware(['auth', 'role:hotel_manager'])->group(function () {
     Route::get('/hotel/dashboard', [DashboardController::class, 'hotelDashboard'])->name('hotel.dashboard');
 });
 
 Route::middleware(['auth', 'role:ferry_operator'])->group(function () {
     Route::get('/ferry/dashboard', [DashboardController::class, 'ferryOperatorDashboard'])->name('ferry.dashboard');
-    Route::get('/ferry/operator/schedules', [DashboardController::class, 'ferrySchedules'])->name('ferry.schedules');
-    Route::get('/ferry/operator/schedules/create', [DashboardController::class, 'createFerrySchedule'])->name('ferry.schedules.create');
-    Route::post('/ferry/operator/schedules', [DashboardController::class, 'storeFerrySchedule'])->name('ferry.schedules.store');
-    Route::get('/ferry/operator/schedules/{id}/edit', [DashboardController::class, 'editFerrySchedule'])->name('ferry.schedules.edit');
-    Route::patch('/ferry/operator/schedules/{id}', [DashboardController::class, 'updateFerrySchedule'])->name('ferry.schedules.update');
-    Route::patch('/ferry/operator/schedules/{id}/cancel', [DashboardController::class, 'cancelFerrySchedule'])->name('ferry.schedules.cancel');
-    Route::get('/ferry/tickets', [DashboardController::class, 'ferryTickets'])->name('ferry.tickets');
-    Route::get('/ferry/tickets/validate', [DashboardController::class, 'validateTicket'])->name('ferry.tickets.validate');
-    Route::post('/ferry/tickets/validate', [DashboardController::class, 'submitValidation'])->name('ferry.tickets.validate.submit');
-    Route::post('/ferry/tickets/issue', [DashboardController::class, 'issueFerryPass'])->name('ferry.tickets.issue');
-    Route::get('/ferry/tickets/create', [DashboardController::class, 'createFerryTicket'])->name('ferry.tickets.create');
-    Route::post('/ferry/tickets/create', [DashboardController::class, 'storeFerryTicket'])->name('ferry.tickets.store');
+
     
     // Ferry ticket request management
     Route::get('/ferry/requests', [DashboardController::class, 'ferryTicketRequests'])->name('ferry.requests');
     Route::patch('/ferry/requests/{id}/approve', [DashboardController::class, 'approveRequest'])->name('ferry.requests.approve');
     Route::patch('/ferry/requests/{id}/deny', [DashboardController::class, 'denyRequest'])->name('ferry.requests.deny');
+
+    Route::get('/ferry/schedules', [FerryScheduleController::class, 'index'])->name('ferry.schedules');
+    Route::get('/ferry/schedules/create', [FerryScheduleController::class, 'create'])->name('ferry.schedules.create');
+    Route::post('/ferry/schedules', [FerryScheduleController::class, 'store'])->name('ferry.schedules.store');
+    Route::get('/ferry/schedules/{id}/edit', [FerryScheduleController::class, 'edit'])->name('ferry.schedules.edit');
+    Route::patch('/ferry/schedules/{id}', [FerryScheduleController::class, 'update'])->name('ferry.schedules.update');
+    Route::patch('/ferry/schedules/{id}/cancel', [FerryScheduleController::class, 'cancel'])->name('ferry.schedules.cancel');
+    Route::get('/ferry/tickets', [FerryTicketController::class, 'index'])->name('ferry.tickets');
+    Route::get('/ferry/tickets/validate', [FerryTicketController::class, 'validateTicket'])->name('ferry.tickets.validate');
+    Route::post('/ferry/tickets/validate', [FerryTicketController::class, 'submitValidation'])->name('ferry.tickets.validate.submit');
+    Route::post('/ferry/tickets/issue', [FerryTicketController::class, 'issueFerryPass'])->name('ferry.tickets.issue');
+    Route::get('/ferry/tickets/create', [FerryTicketController::class, 'create'])->name('ferry.tickets.create');
+    Route::post('/ferry/tickets/create', [FerryTicketController::class, 'store'])->name('ferry.tickets.store');
+
 });
 
 // Admin routes
@@ -92,19 +111,20 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::patch('/admin/locations/{location}/toggle-status', [App\Http\Controllers\AdminLocationController::class, 'toggleStatus'])->name('admin.locations.toggle-status');
 });
 
-// Route for visitors to assign ferry schedules to their tickets
+// Route for visitors to assign ferry schedules to their tickets and book rooms
 Route::middleware(['auth', 'role:visitor'])->group(function () {
     Route::post('/ferry/tickets/assign-schedule', [DashboardController::class, 'assignFerrySchedule'])->name('ferry.tickets.assign-schedule');
     
+
     // Ferry ticket request routes for visitors
     Route::get('/ferry/schedules', [App\Http\Controllers\HomeController::class, 'ferrySchedules'])->name('visitor.ferry.schedules');
     Route::get('/ferry/request', [App\Http\Controllers\HomeController::class, 'requestTicket'])->name('ferry.request');
     Route::post('/ferry/request', [App\Http\Controllers\HomeController::class, 'submitRequest'])->name('ferry.submit-request');
     Route::get('/ferry/my-requests', [App\Http\Controllers\HomeController::class, 'myRequests'])->name('ferry.my-requests');
     
-    // Room booking routes
-    Route::get('/rooms', [App\Http\Controllers\RoomController::class, 'index'])->name('rooms.index');
-    Route::get('/rooms/{id}', [App\Http\Controllers\RoomController::class, 'show'])->name('rooms.show');
+   
+    // Room booking routes (viewing routes moved to public section above)
+
     Route::post('/rooms/{id}/book', [App\Http\Controllers\RoomController::class, 'book'])->name('rooms.book');
     Route::post('/rooms/check-availability', [App\Http\Controllers\RoomController::class, 'checkAvailability'])->name('rooms.check-availability');
     Route::get('/bookings/{id}/confirmation', [App\Http\Controllers\RoomController::class, 'confirmation'])->name('bookings.confirmation');

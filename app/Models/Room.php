@@ -55,4 +55,5 @@ class Room extends Model
             return 'Occupied';
         }
     }
+        
 }

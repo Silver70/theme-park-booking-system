@@ -162,4 +162,40 @@ class MenuService
             ],
         ];
     }
+
+    /**
+     * Get visitor dashboard menu items
+     *
+     * @return array
+     */
+    public function getVisitorMenu(): array
+    {
+        return [
+            [
+                'name' => 'Overview',
+                'icon' => 'dashboard',
+                'route' => 'welcome',
+            ],
+            [
+                'name' => 'Accommodations',
+                'icon' => 'rooms',
+                'route' => 'rooms.index',
+            ],
+            [
+                'name' => 'Ferry Schedules',
+                'icon' => 'calendar',
+                'route' => 'schedules.index',
+            ],
+            [
+                'name' => 'Explore Map',
+                'icon' => 'chart',
+                'route' => 'explore-map.index',
+            ],
+            [
+                'name' => 'Attractions',
+                'icon' => 'image',
+                'route' => 'welcome',
+            ],
+        ];
+    }
 }

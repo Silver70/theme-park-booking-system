@@ -10,9 +10,21 @@
                     <a href="{{ route('rooms.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                         ← Back to All Rooms
                     </a>
-                    <a href="{{ route('visitor-dashboard') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                        My Details
-                    </a>
+                    @auth
+                        @if(Auth::user()->isVisitor())
+                            <a href="{{ route('visitor-dashboard') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                My Details
+                            </a>
+                        @else
+                            <a href="{{ route('dashboard') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                Dashboard
+                            </a>
+                        @endif
+                    @else
+                        <a href="{{ route('welcome') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            Home
+                        </a>
+                    @endauth
                 </div>
             </div>
         </div>
@@ -88,53 +100,104 @@
                             </div>
                         </div>
                         
-                        <!-- Booking Form -->
+                        <!-- Booking Section -->
                         <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg">
-                            <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Book This Room</h2>
-                            
-                            <form method="POST" action="{{ route('rooms.book', $room->id) }}">
-                                @csrf
+                            @auth
+                                <!-- Booking Form for Logged In Users -->
+                                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Book This Room</h2>
                                 
-                                <div class="space-y-4">
-                                    <div>
-                                        <label for="check_in_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Check-in Date</label>
-                                        <input type="date" id="check_in_date" name="check_in_date" required
-                                               value="{{ old('check_in_date') }}"
-                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-600 dark:text-white"
-                                               min="{{ date('Y-m-d', strtotime('+1 day')) }}">
+                                <form method="POST" action="{{ route('rooms.book', $room->id) }}">
+                                    @csrf
+                                    
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label for="check_in_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Check-in Date</label>
+                                            <input type="date" id="check_in_date" name="check_in_date" required
+                                                   value="{{ old('check_in_date') }}"
+                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-600 dark:text-white"
+                                                   min="{{ date('Y-m-d', strtotime('+1 day')) }}">
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="check_out_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Check-out Date</label>
+                                            <input type="date" id="check_out_date" name="check_out_date" required
+                                                   value="{{ old('check_out_date') }}"
+                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-600 dark:text-white"
+                                                   min="{{ date('Y-m-d', strtotime('+2 days')) }}">
+                                        </div>
+                                        
+                                        <div class="border-t border-gray-200 dark:border-gray-600 pt-4">
+                                            <div class="flex justify-between items-center mb-2">
+                                                <span class="text-gray-600 dark:text-gray-400">Price per night:</span>
+                                                <span class="font-semibold text-gray-900 dark:text-gray-100">{{ $room->formatted_price }}</span>
+                                            </div>
+                                            <div class="flex justify-between items-center mb-2">
+                                                <span class="text-gray-600 dark:text-gray-400">Number of nights:</span>
+                                                <span class="font-semibold text-gray-900 dark:text-gray-100" id="nightsCount">-</span>
+                                            </div>
+                                            <div class="border-t border-gray-200 dark:border-gray-600 pt-2">
+                                                <div class="flex justify-between items-center">
+                                                    <span class="text-lg font-semibold text-gray-900 dark:text-gray-100">Total:</span>
+                                                    <span class="text-lg font-bold text-green-600 dark:text-green-400" id="totalPrice">-</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <button type="submit"
+                                                class="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-150">
+                                            Confirm Booking
+                                        </button>
+                                    </div>
+                                </form>
+                            @else
+                                <!-- Login Prompt for Guests -->
+                                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Ready to Book?</h2>
+                                
+                                <div class="text-center space-y-4">
+                                    <div class="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                                        <div class="flex items-center justify-center mb-3">
+                                            <svg class="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                            </svg>
+                                        </div>
+                                        <h3 class="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-2">Sign In Required</h3>
+                                        <p class="text-blue-700 dark:text-blue-300 text-sm mb-4">Please sign in or create an account to book this room and access our booking system.</p>
                                     </div>
                                     
-                                    <div>
-                                        <label for="check_out_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Check-out Date</label>
-                                        <input type="date" id="check_out_date" name="check_out_date" required
-                                               value="{{ old('check_out_date') }}"
-                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-600 dark:text-white"
-                                               min="{{ date('Y-m-d', strtotime('+2 days')) }}">
+                                    <div class="space-y-3">
+                                        <a href="{{ route('login') }}" 
+                                           class="w-full inline-flex justify-center items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200">
+                                            Sign In to Book
+                                        </a>
+                                        <a href="{{ route('register') }}" 
+                                           class="w-full inline-flex justify-center items-center px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200">
+                                            Create New Account
+                                        </a>
                                     </div>
                                     
                                     <div class="border-t border-gray-200 dark:border-gray-600 pt-4">
-                                        <div class="flex justify-between items-center mb-2">
-                                            <span class="text-gray-600 dark:text-gray-400">Price per night:</span>
-                                            <span class="font-semibold text-gray-900 dark:text-gray-100">{{ $room->formatted_price }}</span>
-                                        </div>
-                                        <div class="flex justify-between items-center mb-2">
-                                            <span class="text-gray-600 dark:text-gray-400">Number of nights:</span>
-                                            <span class="font-semibold text-gray-900 dark:text-gray-100" id="nightsCount">-</span>
-                                        </div>
-                                        <div class="border-t border-gray-200 dark:border-gray-600 pt-2">
-                                            <div class="flex justify-between items-center">
-                                                <span class="text-lg font-semibold text-gray-900 dark:text-gray-100">Total:</span>
-                                                <span class="text-lg font-bold text-green-600 dark:text-green-400" id="totalPrice">-</span>
+                                        <div class="bg-gray-100 dark:bg-gray-600 rounded-lg p-4">
+                                            <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-2">Room Information</h4>
+                                            <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                                                <div class="flex justify-between">
+                                                    <span>Price per night:</span>
+                                                    <span class="font-semibold text-gray-900 dark:text-gray-100">{{ $room->formatted_price }}</span>
+                                                </div>
+                                                <div class="flex justify-between">
+                                                    <span>Capacity:</span>
+                                                    <span class="font-semibold text-gray-900 dark:text-gray-100">{{ $room->capacity ?? 2 }} guests</span>
+                                                </div>
+                                                <div class="flex justify-between">
+                                                    <span>Status:</span>
+                                                    <span class="font-semibold {{ $room->is_available ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
+                                                        {{ $room->is_available ? 'Available' : 'Not Available' }}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    <button type="submit"
-                                            class="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-150">
-                                        Confirm Booking
-                                    </button>
                                 </div>
-                            </form>
+                            @endauth
                             
                             <div class="mt-6 text-center">
                                 <a href="{{ route('rooms.index') }}" 

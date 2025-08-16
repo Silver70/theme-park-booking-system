@@ -13,4 +13,11 @@ class MapController extends Controller
         
         return view('map.index', compact('locations'));
     }
+
+    public function publicIndex()
+    {
+        $locations = Location::active()->ordered()->get();
+        
+        return view('explore-map.index', compact('locations'));
+    }
 }
