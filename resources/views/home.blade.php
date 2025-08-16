@@ -47,6 +47,52 @@
                             </div>
                         </div>
                     @endif
+
+                    <!-- Resort Map Section -->
+                    <div class="mb-8 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-lg border border-indigo-200 dark:border-indigo-700">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h2 class="text-xl font-semibold text-indigo-800 dark:text-indigo-200">Explore Our Resort</h2>
+                                <p class="text-indigo-600 dark:text-indigo-400 text-sm">Discover restaurants, activities, and points of interest</p>
+                            </div>
+                            <a href="{{ route('map.index') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                View Map
+                            </a>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="text-center p-4 bg-white dark:bg-gray-700 rounded-lg">
+                                <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-1">Resort Locations</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Find your way around</p>
+                            </div>
+                            <div class="text-center p-4 bg-white dark:bg-gray-700 rounded-lg">
+                                <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-1">Restaurants</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Dining options</p>
+                            </div>
+                            <div class="text-center p-4 bg-white dark:bg-gray-700 rounded-lg">
+                                <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-1">Activities</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Things to do</p>
+                            </div>
+                        </div>
+                    </div>
                     
                     @if($booking)
                         <!-- Booking Information -->

@@ -158,6 +158,8 @@
                 </div>
             </div>
 
+
+
             <!-- Quick Actions -->
             <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Quick Actions</h3>
@@ -213,4 +215,6 @@
             </div>
         </div>
     </x-sidebar>
+
+
 </x-app-layout> 

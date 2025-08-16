@@ -13,7 +13,9 @@
                 <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
-                            <x-dynamic-component component="fluentui-conference-room-20-o" class="w-8 h-8 text-blue-600" />
+                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Rooms</p>
@@ -26,7 +28,9 @@
                 <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
-                            <x-dynamic-component component="radix-calendar" class="w-8 h-8 text-green-600" />
+                            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Bookings</p>
@@ -39,7 +43,11 @@
                 <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
-                            <x-dynamic-component component="radix-dashboard" class="w-8 h-8 text-purple-600" />
+                            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5v14"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 5v14"></path>
+                            </svg>
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Quick Actions</p>
@@ -113,15 +121,21 @@
                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Quick Actions</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <a href="{{ route('hotelstaff.rooms.index') }}" class="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                        <x-dynamic-component component="fluentui-conference-room-20-o" class="w-6 h-6 text-blue-600 mr-3" />
+                        <svg class="w-6 h-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
                         <span class="text-gray-900 dark:text-gray-100">Manage Rooms</span>
                     </a>
                     <a href="{{ route('hotelstaff.bookings.index') }}" class="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                        <x-dynamic-component component="radix-calendar" class="w-6 h-6 text-green-600 mr-3" />
+                        <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
                         <span class="text-gray-900 dark:text-gray-100">Manage Bookings</span>
                     </a>
                     <a href="{{ route('hotelstaff.reports.index') }}" class="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                        <x-dynamic-component component="radix-bar-chart" class="w-6 h-6 text-purple-600 mr-3" />
+                        <svg class="w-6 h-6 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
                         <span class="text-gray-900 dark:text-gray-100">View Reports</span>
                     </a>
                 </div>

@@ -75,10 +75,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/ferry/tickets/{ticket}', [App\Http\Controllers\AdminController::class, 'showFerryTicket'])->name('admin.ferry.tickets.show');
     
     Route::get('/admin/reports', [App\Http\Controllers\AdminController::class, 'reports'])->name('admin.reports.index');
+    Route::get('/admin/reports/analytics', [App\Http\Controllers\AdminController::class, 'viewAnalytics'])->name('admin.reports.analytics');
+    Route::post('/admin/reports/export', [App\Http\Controllers\AdminController::class, 'exportReports'])->name('admin.reports.export');
     
     // Dashboard Images Management
     Route::resource('/admin/dashboard-images', App\Http\Controllers\AdminDashboardImageController::class, ['as' => 'admin']);
     Route::patch('/admin/dashboard-images/{dashboardImage}/toggle-status', [App\Http\Controllers\AdminDashboardImageController::class, 'toggleStatus'])->name('admin.dashboard-images.toggle-status');
+    
+    // Location Management
+    Route::resource('/admin/locations', App\Http\Controllers\AdminLocationController::class, ['as' => 'admin']);
+    Route::patch('/admin/locations/{location}/toggle-status', [App\Http\Controllers\AdminLocationController::class, 'toggleStatus'])->name('admin.locations.toggle-status');
 });
 
 // Route for visitors to assign ferry schedules to their tickets
@@ -90,6 +96,9 @@ Route::middleware(['auth', 'role:visitor'])->group(function () {
     Route::get('/rooms/{id}', [App\Http\Controllers\RoomController::class, 'show'])->name('rooms.show');
     Route::post('/rooms/{id}/book', [App\Http\Controllers\RoomController::class, 'book'])->name('rooms.book');
     Route::post('/rooms/check-availability', [App\Http\Controllers\RoomController::class, 'checkAvailability'])->name('rooms.check-availability');
+    
+    // Map route for visitors
+    Route::get('/map', [App\Http\Controllers\MapController::class, 'index'])->name('map.index');
 });
 
 // Hotel staff routes
