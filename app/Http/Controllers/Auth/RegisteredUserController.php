@@ -49,14 +49,14 @@ class RegisteredUserController extends Controller
         return redirect(route('visitor-dashboard', absolute: false));
     }
 
-    //hotel owner registration
+    //hotel manager registration
 
-    public function createHotelOwner()
+    public function createHotelManager()
     {
-        return view('auth.register', ['role' => 'hotel_owner']);
+        return view('auth.register', ['role' => 'hotel_manager']);
     }
 
-    public function storeHotelOwner(Request $request)
+    public function storeHotelManager(Request $request)
     {
        
         $request->validate([
@@ -71,7 +71,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->assignRole('hotel_owner');
+        $user->assignRole('hotel_manager');
 
         Auth::login($user);
 

@@ -67,9 +67,9 @@ class UserSeeder extends Seeder
         User::firstOrCreate([
             'email' => 'hotel1@resort.com',
         ], [
-            'name' => 'hotel_owner_1',
+            'name' => 'hotel_manager_1',
             'password' => Hash::make('password123'),
-        ])->assignRole('hotel_owner');
+        ])->assignRole('hotel_manager');
 
         User::firstOrCreate([
             'email' => 'staff1@resort.com',

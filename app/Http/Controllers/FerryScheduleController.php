@@ -36,6 +36,26 @@ class FerryScheduleController extends Controller
         return view('ferry.schedules.index', compact('menuItems', 'schedules'));
     }
 
+    public function publicIndex()
+    {
+        $schedules = FerrySchedule::whereNull('cancelled_at')
+            ->where('departure_time', '>', now())
+            ->orderBy('departure_time')
+            ->paginate(12);
+        
+        // Add fresh capacity data to each schedule
+        $schedules->getCollection()->transform(function ($schedule) {
+            $ticketCount = FerryTicket::where('ferry_schedule_id', $schedule->id)->count();
+            $schedule->fresh_tickets_issued = $ticketCount;
+            $schedule->fresh_remaining_capacity = $schedule->seats_available - $ticketCount;
+            $schedule->fresh_capacity_display = $ticketCount . '/' . $schedule->seats_available;
+            $schedule->fresh_is_full = $ticketCount >= $schedule->seats_available;
+            return $schedule;
+        });
+        
+        return view('schedules.index', compact('schedules'));
+    }
+
     public function create()
     {
         $menuItems = $this->menuService->getFerryOperatorMenu();

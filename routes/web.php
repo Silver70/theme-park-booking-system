@@ -11,9 +11,15 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    $rooms = Room::all()->take(3);
+    $rooms = Room::where('is_available', true)->take(6)->get();
     return view('welcome', compact('rooms'));
-});
+})->name('welcome');
+
+// Public routes for viewing schedules, map, and rooms (no booking)
+Route::get('/schedules', [FerryScheduleController::class, 'publicIndex'])->name('schedules.index');
+Route::get('/explore-map', [App\Http\Controllers\MapController::class, 'publicIndex'])->name('explore-map.index');
+Route::get('/rooms', [App\Http\Controllers\RoomController::class, 'index'])->name('rooms.index');
+Route::get('/rooms/{id}', [App\Http\Controllers\RoomController::class, 'show'])->name('rooms.show');
 
 Route::get('/hotel/booking', function () {
     $rooms = Room::all();
@@ -37,7 +43,7 @@ Route::middleware('auth')->group(function () {
 // })->middleware(['auth', 'verified'])->name('hotel.dashboard');
 
 // Route::get('/hotel/dashboard', [DashboardController::class, 'hotelDashboard'])->middleware(['auth', 'verified'])->name('hotel.dashboard');
-Route::middleware(['auth', 'role:hotel_owner'])->group(function () {
+Route::middleware(['auth', 'role:hotel_manager'])->group(function () {
     Route::get('/hotel/dashboard', [DashboardController::class, 'hotelDashboard'])->name('hotel.dashboard');
 });
 
@@ -97,13 +103,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::patch('/admin/locations/{location}/toggle-status', [App\Http\Controllers\AdminLocationController::class, 'toggleStatus'])->name('admin.locations.toggle-status');
 });
 
-// Route for visitors to assign ferry schedules to their tickets
+// Route for visitors to assign ferry schedules to their tickets and book rooms
 Route::middleware(['auth', 'role:visitor'])->group(function () {
     Route::post('/ferry/tickets/assign-schedule', [DashboardController::class, 'assignFerrySchedule'])->name('ferry.tickets.assign-schedule');
     
-    // Room booking routes
-    Route::get('/rooms', [App\Http\Controllers\RoomController::class, 'index'])->name('rooms.index');
-    Route::get('/rooms/{id}', [App\Http\Controllers\RoomController::class, 'show'])->name('rooms.show');
+    // Room booking routes (viewing routes moved to public section above)
     Route::post('/rooms/{id}/book', [App\Http\Controllers\RoomController::class, 'book'])->name('rooms.book');
     Route::post('/rooms/check-availability', [App\Http\Controllers\RoomController::class, 'checkAvailability'])->name('rooms.check-availability');
     

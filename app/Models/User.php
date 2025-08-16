@@ -53,9 +53,9 @@ class User extends Authenticatable
         return $this->hasRole('admin');
     }
 
-    public function isHotelOwner()
+    public function isHotelManager()
     {
-        return $this->hasRole('hotel_owner');
+        return $this->hasRole('hotel_manager');
     }
 
     public function isFerryOperator()

@@ -32,7 +32,7 @@ class AuthenticatedSessionController extends Controller
         
         if($user->isAdmin()){
             return redirect()->intended(route('admin.dashboard', absolute:false));
-        } else if($user->isHotelOwner()){
+        } else if($user->isHotelManager()){
             return redirect()->intended(route('hotel.dashboard', absolute:false));
         } else if($user->isFerryOperator()){
             return redirect()->intended(route('ferry.dashboard', absolute:false));
