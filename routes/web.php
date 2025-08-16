@@ -3,12 +3,22 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-
+use App\Http\Controllers\FerryScheduleController;
+use App\Http\Controllers\FerryTicketController;
+use App\Models\Room;
 use Illuminate\Support\Facades\Route;
 
+
+
 Route::get('/', function () {
-    return view('welcome');
+    $rooms = Room::all()->take(3);
+    return view('welcome', compact('rooms'));
 });
+
+Route::get('/hotel/booking', function () {
+    $rooms = Room::all();
+    return view('hotel.booking', compact('rooms'));
+})->name('hotel.booking');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -33,18 +43,18 @@ Route::middleware(['auth', 'role:hotel_owner'])->group(function () {
 
 Route::middleware(['auth', 'role:ferry_operator'])->group(function () {
     Route::get('/ferry/dashboard', [DashboardController::class, 'ferryOperatorDashboard'])->name('ferry.dashboard');
-    Route::get('/ferry/schedules', [DashboardController::class, 'ferrySchedules'])->name('ferry.schedules');
-    Route::get('/ferry/schedules/create', [DashboardController::class, 'createFerrySchedule'])->name('ferry.schedules.create');
-    Route::post('/ferry/schedules', [DashboardController::class, 'storeFerrySchedule'])->name('ferry.schedules.store');
-    Route::get('/ferry/schedules/{id}/edit', [DashboardController::class, 'editFerrySchedule'])->name('ferry.schedules.edit');
-    Route::patch('/ferry/schedules/{id}', [DashboardController::class, 'updateFerrySchedule'])->name('ferry.schedules.update');
-    Route::patch('/ferry/schedules/{id}/cancel', [DashboardController::class, 'cancelFerrySchedule'])->name('ferry.schedules.cancel');
-    Route::get('/ferry/tickets', [DashboardController::class, 'ferryTickets'])->name('ferry.tickets');
-    Route::get('/ferry/tickets/validate', [DashboardController::class, 'validateTicket'])->name('ferry.tickets.validate');
-    Route::post('/ferry/tickets/validate', [DashboardController::class, 'submitValidation'])->name('ferry.tickets.validate.submit');
-    Route::post('/ferry/tickets/issue', [DashboardController::class, 'issueFerryPass'])->name('ferry.tickets.issue');
-    Route::get('/ferry/tickets/create', [DashboardController::class, 'createFerryTicket'])->name('ferry.tickets.create');
-    Route::post('/ferry/tickets/create', [DashboardController::class, 'storeFerryTicket'])->name('ferry.tickets.store');
+    Route::get('/ferry/schedules', [FerryScheduleController::class, 'index'])->name('ferry.schedules');
+    Route::get('/ferry/schedules/create', [FerryScheduleController::class, 'create'])->name('ferry.schedules.create');
+    Route::post('/ferry/schedules', [FerryScheduleController::class, 'store'])->name('ferry.schedules.store');
+    Route::get('/ferry/schedules/{id}/edit', [FerryScheduleController::class, 'edit'])->name('ferry.schedules.edit');
+    Route::patch('/ferry/schedules/{id}', [FerryScheduleController::class, 'update'])->name('ferry.schedules.update');
+    Route::patch('/ferry/schedules/{id}/cancel', [FerryScheduleController::class, 'cancel'])->name('ferry.schedules.cancel');
+    Route::get('/ferry/tickets', [FerryTicketController::class, 'index'])->name('ferry.tickets');
+    Route::get('/ferry/tickets/validate', [FerryTicketController::class, 'validateTicket'])->name('ferry.tickets.validate');
+    Route::post('/ferry/tickets/validate', [FerryTicketController::class, 'submitValidation'])->name('ferry.tickets.validate.submit');
+    Route::post('/ferry/tickets/issue', [FerryTicketController::class, 'issueFerryPass'])->name('ferry.tickets.issue');
+    Route::get('/ferry/tickets/create', [FerryTicketController::class, 'create'])->name('ferry.tickets.create');
+    Route::post('/ferry/tickets/create', [FerryTicketController::class, 'store'])->name('ferry.tickets.store');
 });
 
 // Admin routes
