@@ -55,9 +55,6 @@
                                                 </div>
                                                 <div>
                                                     <p class="text-gray-600 dark:text-gray-400">
-                                                        <strong>Total Price:</strong> ${{ number_format($booking->total_price, 2) }}
-                                                    </p>
-                                                    <p class="text-gray-600 dark:text-gray-400">
                                                         <strong>Booking Reference:</strong> #{{ $booking->id }}
                                                     </p>
                                                     <p class="text-gray-600 dark:text-gray-400">

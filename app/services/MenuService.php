@@ -67,7 +67,7 @@ class MenuService
             [
                 'name' => 'Reports',
                 'icon' => 'chart',
-                'route' => 'dashboard',
+                'route' => 'ferry.reports',
             ],
         ];
     }
@@ -150,11 +150,7 @@ class MenuService
                 'icon' => 'calendar',
                 'route' => 'hotelstaff.bookings.index',
             ],
-            [
-                'name' => 'Promotions',
-                'icon' => 'chart',
-                'route' => 'hotelstaff.promotions.index',
-            ],
+          
             [
                 'name' => 'Reports',
                 'icon' => 'chart',

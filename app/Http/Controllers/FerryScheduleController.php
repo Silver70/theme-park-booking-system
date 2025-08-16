@@ -107,4 +107,95 @@ class FerryScheduleController extends Controller
         $schedule->save();
         return redirect()->route('ferry.schedules')->with('success', 'Ferry schedule cancelled successfully!');
     }
+
+    public function reports()
+    {
+        $menuItems = $this->menuService->getFerryOperatorMenu();
+        
+        // Generate comprehensive ferry operation reports
+        $reports = [
+            'schedule_stats' => [
+                'total_schedules' => FerrySchedule::count(),
+                'active_schedules' => FerrySchedule::whereNull('cancelled_at')
+                    ->where('departure_time', '>', now())->count(),
+                'completed_schedules' => FerrySchedule::whereNull('cancelled_at')
+                    ->where('departure_time', '<=', now())->count(),
+                'cancelled_schedules' => FerrySchedule::whereNotNull('cancelled_at')->count(),
+                'this_week' => FerrySchedule::whereBetween('departure_time', [
+                    now()->startOfWeek(), now()->endOfWeek()
+                ])->count(),
+                'this_month' => FerrySchedule::whereMonth('departure_time', now()->month)
+                    ->whereYear('departure_time', now()->year)->count(),
+            ],
+            'ticket_stats' => [
+                'total_tickets' => FerryTicket::count(),
+                'tickets_today' => FerryTicket::whereDate('created_at', today())->count(),
+                'tickets_this_week' => FerryTicket::whereBetween('created_at', [
+                    now()->startOfWeek(), now()->endOfWeek()
+                ])->count(),
+                'tickets_this_month' => FerryTicket::whereMonth('created_at', now()->month)
+                    ->whereYear('created_at', now()->year)->count(),
+                'used_tickets' => FerryTicket::where('is_used', true)->count(),
+                'unused_tickets' => FerryTicket::where('is_used', false)->count(),
+            ],
+            'revenue_stats' => [
+                'total_revenue' => FerryTicket::sum('price'),
+                'this_week_revenue' => FerryTicket::whereBetween('created_at', [
+                    now()->startOfWeek(), now()->endOfWeek()
+                ])->sum('price'),
+                'this_month_revenue' => FerryTicket::whereMonth('created_at', now()->month)
+                    ->whereYear('created_at', now()->year)->sum('price'),
+                'average_ticket_price' => FerryTicket::avg('price') ?? 0,
+            ],
+            'capacity_stats' => [
+                'total_capacity' => FerrySchedule::sum('seats_available'),
+                'total_booked' => FerryTicket::count(),
+                'utilization_rate' => FerrySchedule::sum('seats_available') > 0 
+                    ? round((FerryTicket::count() / FerrySchedule::sum('seats_available')) * 100, 2) 
+                    : 0,
+            ]
+        ];
+
+        // Get popular routes
+        $popularRoutes = FerrySchedule::selectRaw('CONCAT(origin, " → ", destination) as route, COUNT(*) as trips, SUM(seats_available) as total_seats')
+            ->groupBy('origin', 'destination')
+            ->orderBy('trips', 'desc')
+            ->limit(5)
+            ->get();
+
+        // Get recent schedules with ticket counts
+        $recentSchedules = FerrySchedule::with('ferryTickets')
+            ->orderBy('departure_time', 'desc')
+            ->limit(10)
+            ->get()
+            ->map(function ($schedule) {
+                $ticketCount = $schedule->ferryTickets->count();
+                $schedule->ticket_count = $ticketCount;
+                $schedule->capacity_used = $schedule->seats_available > 0 
+                    ? round(($ticketCount / $schedule->seats_available) * 100, 1) 
+                    : 0;
+                return $schedule;
+            });
+
+        // Monthly ticket sales data for charts
+        $monthlyData = [];
+        for ($i = 11; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $monthlyData[] = [
+                'month' => $date->format('M Y'),
+                'tickets' => FerryTicket::whereMonth('created_at', $date->month)
+                    ->whereYear('created_at', $date->year)->count(),
+                'revenue' => FerryTicket::whereMonth('created_at', $date->month)
+                    ->whereYear('created_at', $date->year)->sum('price'),
+            ];
+        }
+
+        return view('ferry.reports.index', compact(
+            'menuItems', 
+            'reports', 
+            'popularRoutes', 
+            'recentSchedules', 
+            'monthlyData'
+        ));
+    }
 }

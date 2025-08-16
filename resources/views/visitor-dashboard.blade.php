@@ -224,7 +224,7 @@
                         </div>
                     @endif
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                         <!-- Hotel Booking Card -->
                         <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg border border-blue-200 dark:border-blue-700">
                             <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-3">Hotel Accommodations</h3>
@@ -238,17 +238,8 @@
                         <div class="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border border-green-200 dark:border-green-700">
                             <h3 class="text-lg font-semibold text-green-800 dark:text-green-200 mb-3">Ferry Services</h3>
                             <p class="text-green-700 dark:text-green-300 mb-4">Explore our island destinations with our reliable ferry services.</p>
-                            <a href="#" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            <a href="{{ route('schedules.index') }}" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                 View Schedules
-                            </a>
-                        </div>
-
-                        <!-- Events Card -->
-                        <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-lg border border-purple-200 dark:border-purple-700">
-                            <h3 class="text-lg font-semibold text-purple-800 dark:text-purple-200 mb-3">Events & Activities</h3>
-                            <p class="text-purple-700 dark:text-purple-300 mb-4">Discover exciting events and activities during your stay.</p>
-                            <a href="#" class="inline-flex items-center px-4 py-2 bg-purple-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 focus:bg-purple-700 active:bg-purple-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                Browse Events
                             </a>
                         </div>
                     </div>

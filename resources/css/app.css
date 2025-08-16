@@ -1,3 +1,64 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom scrollbar styles for sidebar */
+@layer utilities {
+    .scrollbar-hide {
+        /* Firefox */
+        scrollbar-width: none;
+        /* Safari and Chrome */
+        -ms-overflow-style: none;
+    }
+    
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .scrollbar-hide:hover {
+        scrollbar-width: thin;
+        -ms-overflow-style: auto;
+    }
+    
+    .scrollbar-hide:hover::-webkit-scrollbar {
+        display: block;
+        width: 4px;
+    }
+    
+    .scrollbar-hide:hover::-webkit-scrollbar-track {
+        background: rgba(55, 65, 81, 0.1);
+        border-radius: 4px;
+    }
+    
+    .scrollbar-hide:hover::-webkit-scrollbar-thumb {
+        background: rgba(156, 163, 175, 0.5);
+        border-radius: 4px;
+    }
+    
+    .scrollbar-hide:hover::-webkit-scrollbar-thumb:hover {
+        background: rgba(156, 163, 175, 0.8);
+    }
+    
+    /* Fade indicators for scrollable content */
+    .scroll-fade-top {
+        background: linear-gradient(to bottom, rgba(17, 24, 39, 1) 0%, rgba(17, 24, 39, 0) 100%);
+        height: 20px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        pointer-events: none;
+    }
+    
+    .scroll-fade-bottom {
+        background: linear-gradient(to top, rgba(17, 24, 39, 1) 0%, rgba(17, 24, 39, 0) 100%);
+        height: 20px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        pointer-events: none;
+    }
+}

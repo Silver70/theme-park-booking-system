@@ -68,6 +68,9 @@ Route::middleware(['auth', 'role:ferry_operator'])->group(function () {
     Route::post('/ferry/tickets/issue', [FerryTicketController::class, 'issueFerryPass'])->name('ferry.tickets.issue');
     Route::get('/ferry/tickets/create', [FerryTicketController::class, 'create'])->name('ferry.tickets.create');
     Route::post('/ferry/tickets/create', [FerryTicketController::class, 'store'])->name('ferry.tickets.store');
+    
+    // Ferry Reports
+    Route::get('/ferry/reports', [FerryScheduleController::class, 'reports'])->name('ferry.reports');
 
 });
 

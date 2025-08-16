@@ -103,6 +103,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('ferry.dashboard', absolute: false));
+        return redirect(route('ferry.schedules', absolute: false));
     }
 }
