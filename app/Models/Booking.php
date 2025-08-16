@@ -11,9 +11,6 @@ class Booking extends Model
         'room_id',
         'check_in_date',
         'check_out_date',
-        'booking_status',
-        'confirmed_at',
-        'confirmed_by',
     ];
 
     protected $casts = [
@@ -32,10 +29,7 @@ class Booking extends Model
         return $this->belongsTo(Room::class);
     }
 
-    public function confirmedBy()
-    {
-        return $this->belongsTo(User::class, 'confirmed_by');
-    }
+
 
     public function ferryTickets()
     {
@@ -113,63 +107,7 @@ class Booking extends Model
         }
     }
 
-    /**
-     * Get booking confirmation status display text
-     */
-    public function getBookingStatusTextAttribute()
-    {
-        switch ($this->booking_status) {
-            case 'pending':
-                return 'Pending Confirmation';
-            case 'confirmed':
-                return 'Confirmed';
-            case 'cancelled':
-                return 'Cancelled';
-            default:
-                return 'Unknown';
-        }
-    }
 
-    /**
-     * Get booking status color class
-     */
-    public function getBookingStatusColorAttribute()
-    {
-        switch ($this->booking_status) {
-            case 'pending':
-                return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-200';
-            case 'confirmed':
-                return 'bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-200';
-            case 'cancelled':
-                return 'bg-red-100 text-red-800 dark:bg-red-700 dark:text-red-200';
-            default:
-                return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
-        }
-    }
-
-    /**
-     * Check if booking can be confirmed
-     */
-    public function canBeConfirmed()
-    {
-        return $this->booking_status === 'pending';
-    }
-
-    /**
-     * Check if booking is confirmed
-     */
-    public function isConfirmed()
-    {
-        return $this->booking_status === 'confirmed';
-    }
-
-    /**
-     * Check if booking is cancelled
-     */
-    public function isCancelled()
-    {
-        return $this->booking_status === 'cancelled';
-    }
 
     /**
      * Check if user has pending ferry ticket requests for this booking

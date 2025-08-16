@@ -67,27 +67,12 @@ class HotelStaffBookingController extends Controller
         return redirect()->route('hotelstaff.bookings.index')->with('success', 'Booking updated successfully.');
     }
 
-    public function confirm($id)
-    {
-        $booking = Booking::findOrFail($id);
-        
-        if (!$booking->canBeConfirmed()) {
-            return redirect()->route('hotelstaff.bookings.index')->with('error', 'This booking cannot be confirmed.');
-        }
-        
-        $booking->update([
-            'booking_status' => 'confirmed',
-            'confirmed_at' => now(),
-            'confirmed_by' => Auth::id(),
-        ]);
-        
-        return redirect()->route('hotelstaff.bookings.index')->with('success', 'Booking confirmed successfully.');
-    }
+
 
     public function destroy($id)
     {
         $booking = Booking::findOrFail($id);
-        $booking->update(['booking_status' => 'cancelled']);
-        return redirect()->route('hotelstaff.bookings.index')->with('success', 'Booking cancelled successfully.');
+        $booking->delete();
+        return redirect()->route('hotelstaff.bookings.index')->with('success', 'Booking deleted successfully.');
     }
 } 

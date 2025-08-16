@@ -62,14 +62,9 @@
                                         <div class="text-sm text-gray-900 dark:text-gray-100">{{ $booking->check_out_date->format('M d, Y') }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $booking->booking_status_color }}">
-                                            {{ $booking->booking_status_text }}
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-200">
+                                            Confirmed
                                         </span>
-                                        @if($booking->booking_status === 'confirmed' && $booking->confirmed_at)
-                                            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                Confirmed {{ $booking->confirmed_at->diffForHumans() }}
-                                            </div>
-                                        @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @if($booking->check_out_date->isPast())
@@ -87,47 +82,21 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <div class="relative inline-block text-left">
-                                            <button type="button" class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onclick="toggleDropdown({{ $booking->id }})">
-                                                Actions
-                                                <svg class="ml-2 -mr-0.5 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                                </svg>
-                                            </button>
+                                        <div class="flex space-x-2">
+                                            <a href="{{ route('hotelstaff.bookings.edit', $booking->id) }}" 
+                                               class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                Edit
+                                            </a>
                                             
-                                            <div id="dropdown-{{ $booking->id }}" class="hidden absolute right-0 z-10 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                                <div class="py-1">
-                                                    @if($booking->canBeConfirmed())
-                                                        <form method="POST" action="{{ route('hotelstaff.bookings.confirm', $booking->id) }}" class="block">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <button type="submit" class="w-full text-left px-4 py-2 text-sm text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20" onclick="return confirm('Are you sure you want to confirm this booking?')">
-                                                                ✓ Confirm Booking
-                                                            </button>
-                                                        </form>
-                                                    @endif
-                                                    
-                                                    @if(!$booking->isCancelled())
-                                                        <a href="{{ route('hotelstaff.bookings.edit', $booking->id) }}" class="block px-4 py-2 text-sm text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20">
-                                                            ✏️ Edit Booking
-                                                        </a>
-                                                        
-                                                        <form method="POST" action="{{ route('hotelstaff.bookings.destroy', $booking->id) }}" class="block">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-700 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20" onclick="return confirm('Are you sure you want to cancel this booking?')">
-                                                                ✕ Cancel Booking
-                                                            </button>
-                                                        </form>
-                                                    @endif
-                                                    
-                                                    @if($booking->isCancelled())
-                                                        <span class="block px-4 py-2 text-sm text-gray-500 dark:text-gray-400">
-                                                            ℹ️ No actions available
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                            </div>
+                                            <form method="POST" action="{{ route('hotelstaff.bookings.destroy', $booking->id) }}" class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" 
+                                                        class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-red-600 dark:text-red-400 bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                                        onclick="return confirm('Are you sure you want to delete this booking?')">
+                                                    Delete
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -152,41 +121,5 @@
         </div>
     </x-sidebar>
     
-    <script>
-        function toggleDropdown(bookingId) {
-            const dropdown = document.getElementById(`dropdown-${bookingId}`);
-            const allDropdowns = document.querySelectorAll('[id^="dropdown-"]');
-            
-            // Close all other dropdowns
-            allDropdowns.forEach(d => {
-                if (d.id !== `dropdown-${bookingId}`) {
-                    d.classList.add('hidden');
-                }
-            });
-            
-            // Toggle current dropdown
-            dropdown.classList.toggle('hidden');
-        }
-        
-        // Close dropdowns when clicking outside
-        document.addEventListener('click', function(event) {
-            const dropdowns = document.querySelectorAll('[id^="dropdown-"]');
-            const buttons = document.querySelectorAll('button[onclick^="toggleDropdown"]');
-            
-            let clickedButton = false;
-            buttons.forEach(button => {
-                if (button.contains(event.target)) {
-                    clickedButton = true;
-                }
-            });
-            
-            if (!clickedButton) {
-                dropdowns.forEach(dropdown => {
-                    if (!dropdown.contains(event.target)) {
-                        dropdown.classList.add('hidden');
-                    }
-                });
-            }
-        });
-    </script>
+    
 </x-app-layout> 
