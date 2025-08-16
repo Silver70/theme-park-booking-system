@@ -83,4 +83,23 @@ class User extends Authenticatable
     {
         return $this->hasMany(FerryTicket::class);
     }
+
+    /**
+     * Boot the model and add event listeners
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Handle user deletion by cleaning up related records
+        static::deleting(function ($user) {
+            // Delete ferry tickets first (they depend on bookings)
+            $user->ferryTickets()->delete();
+            
+            // Delete bookings
+            $user->bookings()->delete();
+            
+            // Ferry ticket requests will be handled automatically due to cascade delete
+        });
+    }
 }
