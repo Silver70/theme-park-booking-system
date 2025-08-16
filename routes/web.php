@@ -122,6 +122,10 @@ Route::middleware(['auth', 'role:visitor'])->group(function () {
     Route::post('/ferry/request', [App\Http\Controllers\HomeController::class, 'submitRequest'])->name('ferry.submit-request');
     Route::get('/ferry/my-requests', [App\Http\Controllers\HomeController::class, 'myRequests'])->name('ferry.my-requests');
     
+    // Ferry ticket purchase routes for visitors
+    Route::get('/ferry/purchase', [App\Http\Controllers\HomeController::class, 'purchaseTickets'])->name('ferry.purchase');
+    Route::post('/ferry/purchase', [App\Http\Controllers\HomeController::class, 'storePurchase'])->name('ferry.store-ticket');
+    
    
     // Room booking routes (viewing routes moved to public section above)
 
