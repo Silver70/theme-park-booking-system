@@ -25,8 +25,6 @@ class DatabaseSeeder extends Seeder
             RoomSeeder::class,
             BookingSeeder::class,
             PromotionSeeder::class,
-            EventSeeder::class,
-            EventTicketSeeder::class,
             FerryScheduleSeeder::class,
             FerryTicketSeeder::class,
         ]);
