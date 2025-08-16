@@ -70,7 +70,7 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                                 {{ $schedule->departure_time->format('g:i A') }}
-                                         
+                                            </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <div class="flex items-center">
                                                     <span>{{ $schedule->origin }}</span>

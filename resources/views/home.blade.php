@@ -113,7 +113,12 @@
                                         <strong>Check-out:</strong> {{ $booking->check_out_date->format('M d, Y') }}
                                     </p>
                                     <p class="text-blue-600 dark:text-blue-400">
-                                        <strong>Booking ID:</strong> #{{ $booking->id }}
+                                        <strong>Booking Reference:</strong> 
+                                        <span class="font-mono font-bold text-lg">{{ $booking->booking_reference }}</span>
+                                    </p>
+                                    <p class="text-blue-600 dark:text-blue-400">
+                                        <strong>Status:</strong> 
+                                        <span class="font-semibold {{ $booking->status_color }}">{{ $booking->status_text }}</span>
                                     </p>
                                 </div>
                             </div>
@@ -155,11 +160,11 @@
                                         @if($availableSchedules->count() > 0)
                                             <div class="mt-4">
                                                 <h4 class="font-semibold text-yellow-800 dark:text-yellow-200 mb-3">Available Schedules:</h4>
-                                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                                    @foreach($availableSchedules as $schedule)
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    @foreach($availableSchedules->take(4) as $schedule)
                                                         <div class="bg-white dark:bg-gray-700 p-4 rounded border">
                                                             <h5 class="font-semibold text-gray-800 dark:text-gray-200">
-                                                                {{ $schedule->departure_time->format('M d, Y \a\t g:i A') }}
+                                                                {{ $schedule->departure_time->format('M d, g:i A') }}
                                                             </h5>
                                                             <p class="text-gray-600 dark:text-gray-400 text-sm">
                                                                 {{ $schedule->origin }} → {{ $schedule->destination }}
@@ -178,6 +183,14 @@
                                                         </div>
                                                     @endforeach
                                                 </div>
+                                                @if($availableSchedules->count() > 4)
+                                                    <div class="text-center mt-3">
+                                                        <p class="text-sm text-yellow-600 dark:text-yellow-400">
+                                                            Showing 4 of {{ $availableSchedules->count() }} schedules. 
+                                                            <a href="{{ route('visitor.ferry.schedules') }}" class="underline hover:no-underline">View all schedules</a>
+                                                        </p>
+                                                    </div>
+                                                @endif
                                             </div>
                                         @else
                                             <div class="bg-red-100 dark:bg-red-800/30 p-4 rounded-lg">
@@ -190,15 +203,7 @@
                                 @endif
                             </div>
                         @else
-                            <div class="mb-8 p-6 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-                                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Ferry Pass</h2>
-                                <p class="text-gray-600 dark:text-gray-400 mb-4">
-                                    Your booking includes a free ferry pass. Please visit the ferry operator to claim your pass.
-                                </p>
-                                <a href="#" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                    Claim Ferry Pass
-                                </a>
-                            </div>
+                            <!-- Ferry Pass section removed -->
                         @endif
                     @endif
 
@@ -232,18 +237,28 @@
                         <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg border border-blue-200 dark:border-blue-700">
                             <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-3">Hotel Accommodations</h3>
                             <p class="text-blue-700 dark:text-blue-300 mb-4">Book your perfect room and enjoy our luxurious accommodations.</p>
-                            <a href="{{ route('rooms.index') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                Book a Room
-                            </a>
+                            <div class="space-y-2">
+                                <a href="{{ route('rooms.index') }}" class="w-full inline-flex justify-center items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    Book a Room
+                                </a>
+                                <a href="{{ route('my.bookings') }}" class="w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    View My Bookings
+                                </a>
+                            </div>
                         </div>
 
                         <!-- Ferry Services Card -->
                         <div class="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border border-green-200 dark:border-green-700">
                             <h3 class="text-lg font-semibold text-green-800 dark:text-green-200 mb-3">Ferry Services</h3>
                             <p class="text-green-700 dark:text-green-300 mb-4">Explore our island destinations with our reliable ferry services.</p>
-                            <a href="#" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                View Schedules
-                            </a>
+                            <div class="space-y-2">
+                                <a href="{{ route('ferry.request') }}" class="w-full inline-flex justify-center items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    Request Ferry Tickets
+                                </a>
+                                <a href="{{ route('ferry.my-requests') }}" class="w-full inline-flex justify-center items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    View My Ferry Tickets
+                                </a>
+                            </div>
                         </div>
 
                         <!-- Events Card -->
