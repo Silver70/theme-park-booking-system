@@ -60,7 +60,7 @@ class RoomController extends Controller
             'check_out_date' => $request->check_out_date,
         ]);
 
-        return redirect()->route('home')
+        return redirect()->route('visitor-dashboard')
             ->with('success', 'Booking created successfully! Your room has been reserved.');
     }
 

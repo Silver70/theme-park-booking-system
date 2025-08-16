@@ -17,9 +17,9 @@ class VerifyEmailController extends Controller
         $user = $request->user();
         
         if ($user->hasVerifiedEmail()) {
-            if ($user->isVisitor()) {
-                return redirect()->intended(route('home', absolute: false).'?verified=1');
-            }
+                    if ($user->isVisitor()) {
+            return redirect()->intended(route('visitor-dashboard', absolute: false).'?verified=1');
+        }
             return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
         }
 
@@ -28,7 +28,7 @@ class VerifyEmailController extends Controller
         }
 
         if ($user->isVisitor()) {
-            return redirect()->intended(route('home', absolute: false).'?verified=1');
+            return redirect()->intended(route('visitor-dashboard', absolute: false).'?verified=1');
         }
         return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
     }

@@ -18,7 +18,7 @@ class EmailVerificationPromptController extends Controller
         
         if ($user->hasVerifiedEmail()) {
             if ($user->isVisitor()) {
-                return redirect()->intended(route('home', absolute: false));
+                return redirect()->intended(route('visitor-dashboard', absolute: false));
             }
             return redirect()->intended(route('dashboard', absolute: false));
         }

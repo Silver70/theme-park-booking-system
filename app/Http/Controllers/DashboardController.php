@@ -321,7 +321,7 @@ class DashboardController extends Controller
         $ferryTicket->ferry_schedule_id = $schedule->id;
         $ferryTicket->save();
 
-        return redirect()->route('home')->with('success', 'Ferry schedule assigned successfully! Your ferry pass is now confirmed.');
+        return redirect()->route('visitor-dashboard')->with('success', 'Ferry schedule assigned successfully! Your ferry pass is now confirmed.');
     }
 
 }
