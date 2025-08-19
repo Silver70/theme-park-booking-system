@@ -15,18 +15,12 @@ class UserDeletionController extends Controller
     {
         try {
             DB::transaction(function () use ($user) {
-                // Delete related records in correct order
-                
-                // 1. Delete ferry tickets (depends on bookings and users)
+           
                 $user->ferryTickets()->delete();
                 
-                // 2. Delete ferry ticket requests (already has cascade delete)
-                // This will be handled automatically due to existing cascade
                 
-                // 3. Delete bookings (depends on users)
                 $user->bookings()->delete();
                 
-                // 4. Finally delete the user
                 $user->delete();
             });
 
